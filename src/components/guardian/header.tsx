@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { User } from '@/lib/data';
@@ -63,7 +64,7 @@ export function Header({
     <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-card border-b">
       <div className="flex items-center gap-3">
         <Shield className="h-8 w-8 text-primary" />
-        <h1 className="text-xl font-bold text-foreground">GuardianLink</h1>
+        <h1 className="text-xl font-headline font-bold text-foreground">GuardianLink</h1>
       </div>
 
       <DropdownMenu>

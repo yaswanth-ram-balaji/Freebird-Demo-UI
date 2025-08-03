@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -44,7 +45,8 @@ export function SOSButton() {
       <AlertDialogTrigger asChild>
         <Button
           size="lg"
-          className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-2xl flex items-center justify-center gap-2 animate-pulse bg-red-600 hover:bg-red-700 text-white"
+          variant="destructive"
+          className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-2xl flex items-center justify-center gap-2 animate-pulse"
         >
           <PhoneOutgoing className="h-8 w-8" />
           <span className="sr-only">SOS</span>
@@ -53,7 +55,7 @@ export function SOSButton() {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center text-2xl">
-            <PhoneOutgoing className="mr-2 h-8 w-8 text-red-500" /> Confirm Emergency SOS
+            <PhoneOutgoing className="mr-2 h-8 w-8 text-destructive" /> Confirm Emergency SOS
           </AlertDialogTitle>
           <AlertDialogDescription className="text-base py-4">
             This will immediately send an emergency alert with your current location to all nearby users and your trusted contacts. Are you sure you want to proceed?
@@ -72,8 +74,8 @@ export function SOSButton() {
             disabled={isSending}
             onClick={handleSendSOS}
             className={cn(
-              "bg-red-600 hover:bg-red-700",
-              isSending && "bg-red-600/50"
+              "bg-destructive hover:bg-destructive/90",
+              isSending && "bg-destructive/50"
             )}
           >
             {isSending ? 'Sending...' : 'Yes, Send Alert'}
