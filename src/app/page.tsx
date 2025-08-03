@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -17,20 +18,21 @@ const SplashScreen = () => {
             setTimeout(() => setAnimationStep(2), 3000), // Bird flies in
             setTimeout(() => setAnimationStep(3), 5000), // Bird flies out
             setTimeout(() => setAnimationStep(4), 7000), // Logo reveal
+            setTimeout(() => setAnimationStep(5), 8000), // Typing animation start
         ];
         return () => timers.forEach(clearTimeout);
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000" style={{ animationDelay: '13000ms' }}>
+        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000", animationStep >= 5 ? 'opacity-100' : 'opacity-100', animationStep >= 5 && 'fade-out-delayed')}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-                {/* Step 0 & 1: Network Symbol */}
-                <div className={cn("absolute transition-opacity duration-500", animationStep >= 2 ? 'opacity-0' : 'opacity-100')}>
+                {/* Step 0, 1 & 2: Network Symbol */}
+                <div className={cn("absolute transition-opacity duration-500", animationStep >= 3 ? 'opacity-0' : 'opacity-100')}>
                      {animationStep === 0 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
                      {animationStep >= 1 && <WifiOff className="w-24 h-24 text-red-400" />}
                 </div>
 
-                {/* Step 2: Bird flies in and picks up symbol */}
+                {/* Step 2: Bird flies in */}
                 <div 
                     className={cn(
                         "absolute left-1/2 top-1/2 text-5xl",
@@ -40,7 +42,7 @@ const SplashScreen = () => {
                     <span>🕊️</span>
                 </div>
                 
-                 {/* Step 3: Bird flies out */}
+                 {/* Step 3: Bird flies out with symbol */}
                  <div
                      className={cn(
                         "absolute left-1/2 top-1/2",
@@ -53,12 +55,12 @@ const SplashScreen = () => {
                      </div>
                  </div>
 
-                {/* Step 4: Final Logo and Text */}
-                 <div className={cn("text-center transition-opacity duration-1000", animationStep === 4 ? 'opacity-100' : 'opacity-0')}>
+                {/* Step 4 & 5: Final Logo and Text */}
+                 <div className={cn("text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
                     <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '700ms'}}>🕊️</div>
                     <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '900ms'}}>FreeBird</h1>
                     <div className="mt-4 text-lg text-primary-foreground/80">
-                        <p className="animate-typing inline-block">When the internet dies, FreeBird flies.</p>
+                         {animationStep >= 5 && <span className="animate-typing inline-block">When the internet dies, FreeBird flies.</span>}
                     </div>
                 </div>
             </div>
@@ -89,7 +91,7 @@ export default function FreeBirdPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 13000); // Show splash screen for 13 seconds
+    }, 13000); // Show splash screen for 13 seconds total
     return () => clearTimeout(timer);
   }, []);
 
