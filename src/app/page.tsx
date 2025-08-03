@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { SparklesText } from '@/components/ui/sparkles-text';
 
-const SplashScreen = () => {
+const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
     const [animationStep, setAnimationStep] = useState(0);
 
     useEffect(() => {
@@ -20,12 +20,13 @@ const SplashScreen = () => {
             setTimeout(() => setAnimationStep(3), 5000), // Bird flies out
             setTimeout(() => setAnimationStep(4), 7000), // Logo reveal
             setTimeout(() => setAnimationStep(5), 8000), // Typing animation start
+            setTimeout(onFinished, 13000), // Total duration + pause
         ];
         return () => timers.forEach(clearTimeout);
-    }, []);
+    }, [onFinished]);
 
     return (
-        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000")}>
+        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground fixed inset-0 z-50 transition-opacity duration-1000")}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0, 1 & 2: Network Symbol */}
                 <div className={cn("absolute transition-opacity duration-500", (animationStep >= 2 && animationStep < 3) ? 'opacity-100' : (animationStep >=3 ? 'opacity-0' : 'opacity-100'))}>
@@ -66,12 +67,12 @@ const SplashScreen = () => {
                     />
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                         {animationStep >= 5 && (
-                          <span className="animate-typing inline-block">
+                          <div className="animate-typing inline-block whitespace-nowrap overflow-hidden">
                             <span className="text-white">When the internet </span>
                             <span className="text-red-400">dies, </span>
                             <span className="text-white">FreeBird </span>
                             <span className="text-green-400">flies.</span>
-                          </span>
+                          </div>
                         )}
                     </div>
                 </div>
@@ -100,15 +101,8 @@ export default function FreeBirdPage() {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 12000); // Show splash screen for 12 seconds total
-    return () => clearTimeout(timer);
-  }, []);
-  
   if (isLoading) {
-    return <SplashScreen />;
+    return <SplashScreen onFinished={() => setIsLoading(false)} />;
   }
 
   return (
