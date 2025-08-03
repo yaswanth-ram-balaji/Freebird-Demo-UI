@@ -59,7 +59,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
 
                 {/* Step 4 & 5: Final Logo and Text */}
                  <div className={cn("flex flex-col items-center justify-center text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
-                    <div className="flex items-center gap-3 animate-pop-in">
+                    <div className="flex flex-col items-center animate-pop-in">
                         <span className="text-7xl">🕊️</span>
                         <SparklesText
                           text="FreeBird"
@@ -70,7 +70,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     </div>
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                         {animationStep >= 5 && (
-                          <div className="animate-typing inline-block whitespace-nowrap overflow-hidden">
+                          <div className="animate-typing inline-block whitespace-nowrap overflow-hidden font-serif">
                             <span className="text-white">When the internet </span>
                             <span className="text-red-400">dies, </span>
                             <span className="text-white">FreeBird </span>
