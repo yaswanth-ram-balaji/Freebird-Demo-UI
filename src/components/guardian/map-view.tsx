@@ -29,19 +29,19 @@ export function MapView() {
                 data-ai-hint="campus map"
               />
             {/* Simulated user markers */}
-            <div className="absolute top-[20%] left-[30%]">
+            <div className="absolute top-[20%] left-[30%] opacity-0 animate-pop-in" style={{ animationDelay: '100ms' }}>
                 <User className="h-6 w-6 text-blue-500 bg-white rounded-full p-1 shadow-lg" />
             </div>
-            <div className="absolute top-[50%] left-[50%]">
+            <div className="absolute top-[50%] left-[50%] opacity-0 animate-pop-in" style={{ animationDelay: '200ms' }}>
                 <User className="h-6 w-6 text-blue-500 bg-white rounded-full p-1 shadow-lg" />
             </div>
-            <div className="absolute top-[45%] left-[55%]">
+            <div className="absolute top-[45%] left-[55%] opacity-0 animate-pop-in" style={{ animationDelay: '300ms' }}>
                 <User className="h-6 w-6 text-green-500 bg-white rounded-full p-1 shadow-lg" />
             </div>
-             <div className="absolute top-[60%] left-[25%]">
+             <div className="absolute top-[60%] left-[25%] opacity-0 animate-pop-in" style={{ animationDelay: '400ms' }}>
                 <User className="h-6 w-6 text-green-500 bg-white rounded-full p-1 shadow-lg" />
             </div>
-            <div className="absolute top-[70%] left-[70%]">
+            <div className="absolute top-[70%] left-[70%] opacity-0 animate-pop-in" style={{ animationDelay: '500ms' }}>
                 <User className="h-6 w-6 text-yellow-500 bg-white rounded-full p-1 shadow-lg animate-pulse" />
             </div>
              <div className="absolute top-[30%] left-[65%]">
