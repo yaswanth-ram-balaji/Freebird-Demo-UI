@@ -12,7 +12,6 @@ import { SparklesText } from '@/components/ui/sparkles-text';
 
 const SplashScreen = () => {
     const [animationStep, setAnimationStep] = useState(0);
-    const [showSplash, setShowSplash] = useState(true);
 
     useEffect(() => {
         const timers = [
@@ -21,16 +20,15 @@ const SplashScreen = () => {
             setTimeout(() => setAnimationStep(3), 5000), // Bird flies out
             setTimeout(() => setAnimationStep(4), 7000), // Logo reveal
             setTimeout(() => setAnimationStep(5), 8000), // Typing animation start
-            setTimeout(() => setShowSplash(false), 13000), // Fade out splash
         ];
         return () => timers.forEach(clearTimeout);
     }, []);
 
     return (
-        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000", !showSplash && 'opacity-0')}>
+        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000")}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0, 1 & 2: Network Symbol */}
-                <div className={cn("absolute transition-opacity duration-500", animationStep >= 3 ? 'opacity-0' : 'opacity-100')}>
+                <div className={cn("absolute transition-opacity duration-500", animationStep >= 2 ? 'opacity-0' : 'opacity-100')}>
                      {animationStep === 0 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
                      {animationStep >= 1 && <WifiOff className="w-24 h-24 text-red-400" />}
                 </div>
@@ -68,14 +66,14 @@ const SplashScreen = () => {
                       sparklesCount={20}
                     />
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
-                         {animationStep >= 5 && (
+                        {animationStep >= 5 && (
                           <span className="animate-typing inline-block">
-                            <span>When the internet </span>
+                             <span>When the internet </span>
                             <span className="text-red-400">dies, </span>
                             <span>FreeBird </span>
                             <span className="text-green-400">flies.</span>
                           </span>
-                         )}
+                        )}
                     </div>
                 </div>
             </div>
@@ -106,14 +104,16 @@ export default function FreeBirdPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 13000); // Show splash screen for 13 seconds total
+    }, 12000); // Show splash screen for 12 seconds total
     return () => clearTimeout(timer);
   }, []);
+  
+  if (isLoading) {
+    return <SplashScreen />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-      {isLoading && <SplashScreen />}
-      
       <header className="sticky top-0 z-40 w-full bg-primary text-primary-foreground shadow-md">
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
           <div className="flex items-center gap-3">
