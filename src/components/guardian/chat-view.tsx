@@ -7,13 +7,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Paperclip, Send, Smile } from 'lucide-react';
+import { Paperclip, Send, Smile, Copy } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 
 type ChatViewProps = {
@@ -26,6 +28,7 @@ type ChatViewProps = {
 export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewProps) {
   const [message, setMessage] = React.useState('');
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   React.useEffect(() => {
     if (scrollAreaRef.current) {
@@ -63,6 +66,14 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
     }
   };
   
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText('HACK-2024');
+    toast({
+      title: 'Room Code Copied!',
+      description: 'The code HACK-2024 has been copied to your clipboard.',
+    });
+  }
+
   const chatDetails = getChatDetails();
 
   return (
@@ -72,10 +83,27 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
           <AvatarImage src={chatDetails.avatar} />
           <AvatarFallback>{chatDetails.name?.charAt(0)}</AvatarFallback>
         </Avatar>
-        <div>
+        <div className="flex-1">
           <h3 className="font-semibold text-lg">{chatDetails.name}</h3>
           <p className="text-sm text-muted-foreground">{chat.type === 'group' ? `${chat.participants.length} members` : 'Direct Message'}</p>
         </div>
+        {chat.type === 'group' && (
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">Room Code: HACK-2024</Badge>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleCopyCode}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Copy Code</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
       </header>
 
       <ScrollArea className="flex-1" ref={scrollAreaRef}>
@@ -98,7 +126,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
             return (
               <div
                 key={msg.id}
-                className={cn('flex items-end gap-3 animate-in fade-in duration-300', isCurrentUser ? 'justify-end' : 'justify-start')}
+                className={cn('flex items-end gap-3 animate-in fade-in-50 duration-500', isCurrentUser ? 'justify-end' : 'justify-start')}
               >
                 {!isCurrentUser && (
                   <TooltipProvider>
