@@ -152,7 +152,7 @@
     white-space: nowrap;
     border-right: .15em solid hsl(var(--primary-foreground));
     animation: 
-      typing 2s steps(40, end) 1s forwards,
+      typing 4s steps(40, end) 1s forwards,
       blink-caret .75s step-end infinite;
     animation-delay: 8s;
   }

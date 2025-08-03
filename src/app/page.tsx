@@ -22,7 +22,7 @@ const SplashScreen = () => {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000" style={{ animationDelay: '10000ms' }}>
+        <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000" style={{ animationDelay: '12000ms' }}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0 & 1: Network Symbol */}
                 <div className={cn("absolute transition-opacity duration-500", animationStep >= 2 ? 'opacity-0' : 'opacity-100')}>
@@ -55,8 +55,8 @@ const SplashScreen = () => {
 
                 {/* Step 4: Final Logo and Text */}
                  <div className={cn("text-center transition-opacity duration-1000", animationStep === 4 ? 'opacity-100' : 'opacity-0')}>
-                    <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '500ms'}}>🕊️</div>
-                    <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '700ms'}}>FreeBird</h1>
+                    <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '700ms'}}>🕊️</div>
+                    <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '900ms'}}>FreeBird</h1>
                     <div className="mt-4 text-lg text-primary-foreground/80">
                         <p className="animate-typing inline-block">When the internet dies, FreeBird flies.</p>
                     </div>
@@ -89,7 +89,7 @@ export default function FreeBirdPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 10000); // Show splash screen for 10 seconds
+    }, 12000); // Show splash screen for 12 seconds
     return () => clearTimeout(timer);
   }, []);
 
