@@ -28,8 +28,8 @@ const SplashScreen = () => {
         <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000")}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0, 1 & 2: Network Symbol */}
-                <div className={cn("absolute transition-opacity duration-500", animationStep >= 2 ? 'opacity-0' : 'opacity-100')}>
-                     {animationStep === 0 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
+                <div className={cn("absolute transition-opacity duration-500", (animationStep >= 2 && animationStep < 3) ? 'opacity-100' : (animationStep >=3 ? 'opacity-0' : 'opacity-100'))}>
+                     {animationStep < 1 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
                      {animationStep >= 1 && <WifiOff className="w-24 h-24 text-red-400" />}
                 </div>
 
@@ -58,19 +58,18 @@ const SplashScreen = () => {
 
                 {/* Step 4 & 5: Final Logo and Text */}
                  <div className={cn("text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
-                    <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '700ms'}}>🕊️</div>
                     <SparklesText
                       text="FreeBird"
-                      className="text-5xl font-bold tracking-tight font-headline animate-pop-in"
+                      className="text-7xl font-bold tracking-tight font-headline animate-pop-in"
                       colors={{ first: '#FFFFFF', second: '#87CEEB' }}
                       sparklesCount={20}
                     />
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                         {animationStep >= 5 && (
                           <span className="animate-typing inline-block">
-                             <span>When the internet </span>
+                            <span className="text-white">When the internet </span>
                             <span className="text-red-400">dies, </span>
-                            <span>FreeBird </span>
+                            <span className="text-white">FreeBird </span>
                             <span className="text-green-400">flies.</span>
                           </span>
                         )}
