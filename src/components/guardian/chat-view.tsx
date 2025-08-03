@@ -87,7 +87,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
             
             if(isAdminMessage) {
               return (
-                <div key={msg.id} className="text-center text-xs text-muted-foreground my-4 flex items-center gap-2">
+                <div key={msg.id} className="text-center text-xs text-muted-foreground my-4 flex items-center gap-2 animate-in fade-in duration-500">
                   <div className="flex-1 border-t"></div>
                   <span>{msg.text.replace('[ADMIN]', '')}</span>
                   <div className="flex-1 border-t"></div>
@@ -98,7 +98,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
             return (
               <div
                 key={msg.id}
-                className={cn('flex items-end gap-3', isCurrentUser ? 'justify-end' : 'justify-start')}
+                className={cn('flex items-end gap-3 animate-in fade-in duration-300', isCurrentUser ? 'justify-end' : 'justify-start')}
               >
                 {!isCurrentUser && (
                   <TooltipProvider>
