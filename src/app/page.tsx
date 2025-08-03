@@ -57,8 +57,8 @@ const SplashScreen = () => {
                  <div className={cn("text-center transition-opacity duration-1000", animationStep === 4 ? 'opacity-100' : 'opacity-0')}>
                     <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '500ms'}}>🕊️</div>
                     <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '700ms'}}>FreeBird</h1>
-                    <div className="mt-4 text-lg text-primary-foreground/80 overflow-hidden">
-                       <span className="animate-typing">When the internet dies, FreeBird flies.</span>
+                    <div className="mt-4 text-lg text-primary-foreground/80">
+                        <p className="animate-typing inline-block">When the internet dies, FreeBird flies.</p>
                     </div>
                 </div>
             </div>
