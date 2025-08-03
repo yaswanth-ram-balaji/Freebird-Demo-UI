@@ -4,12 +4,12 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600'] });
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-headline', weight: ['700'] });
 
 export const metadata: Metadata = {
-  title: 'GuardianLink',
-  description: 'A safety and emergency communication app.',
+  title: 'FreeBird',
+  description: 'Stay Safe, Stay Connected',
 };
 
 export default function RootLayout({
