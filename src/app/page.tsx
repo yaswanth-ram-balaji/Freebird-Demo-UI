@@ -22,7 +22,7 @@ const SplashScreen = () => {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000" style={{ animationDelay: '12000ms' }}>
+        <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000" style={{ animationDelay: '13000ms' }}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0 & 1: Network Symbol */}
                 <div className={cn("absolute transition-opacity duration-500", animationStep >= 2 ? 'opacity-0' : 'opacity-100')}>
@@ -89,7 +89,7 @@ export default function FreeBirdPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 12000); // Show splash screen for 12 seconds
+    }, 13000); // Show splash screen for 13 seconds
     return () => clearTimeout(timer);
   }, []);
 
