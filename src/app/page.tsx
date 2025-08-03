@@ -146,7 +146,7 @@ export default function FreeBirdPage() {
           </div>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
              <FeatureCard 
-                href="#"
+                href="/guardian/safety"
                 icon={Shield}
                 title="Women's Safety"
                 description="Secure communication and emergency features"
@@ -159,7 +159,7 @@ export default function FreeBirdPage() {
                 isEmergency
               />
               <FeatureCard
-                href="#"
+                href="/guardian/rooms"
                 icon={Users}
                 title="Rooms"
                 description="Create or join private communication rooms"
