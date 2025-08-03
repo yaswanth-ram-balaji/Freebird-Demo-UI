@@ -3,28 +3,76 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, MessageSquare, Map, Settings, Ghost, Feather } from 'lucide-react';
+import { Shield, AlertTriangle, Users, MessageSquare, Map, Settings, Ghost, Feather, Wifi, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 
-const SplashScreen = () => (
-  <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000">
-    <div className="text-center animate-in fade-in duration-500">
-      <Feather className="w-24 h-24 mx-auto mb-6" />
-      <h1 className="text-5xl font-bold tracking-tight font-headline">FreeBird</h1>
-      <p className="mt-2 text-lg text-primary-foreground/80">When networks fail, FreeBird flies.</p>
-    </div>
-  </div>
-);
+const SplashScreen = () => {
+    const [animationStep, setAnimationStep] = useState(0);
+
+    useEffect(() => {
+        const timers = [
+            setTimeout(() => setAnimationStep(1), 1000), // Network loss
+            setTimeout(() => setAnimationStep(2), 1500), // Bird flies in
+            setTimeout(() => setAnimationStep(3), 2500), // Bird flies out
+            setTimeout(() => setAnimationStep(4), 3500), // Logo reveal
+        ];
+        return () => timers.forEach(clearTimeout);
+    }, []);
+
+    return (
+        <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000" style={{ animationDelay: '5000ms' }}>
+            <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+                {/* Step 0 & 1: Network Symbol */}
+                <div className={cn("absolute transition-opacity duration-500", animationStep >= 2 ? 'opacity-0' : 'opacity-100')}>
+                     {animationStep === 0 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
+                     {animationStep >= 1 && <WifiOff className="w-24 h-24 text-red-400" />}
+                </div>
+
+                {/* Step 2: Bird flies in and picks up symbol */}
+                <div 
+                    className={cn(
+                        "absolute right-[-100px] top-1/2 transition-transform duration-1000",
+                        animationStep === 2 && "animate-fly-in"
+                    )}
+                >
+                    <Feather className="w-16 h-16" />
+                </div>
+                
+                 {/* Step 3: Bird flies out */}
+                 <div
+                     className={cn(
+                        "absolute transition-opacity",
+                        animationStep === 3 ? "opacity-100 animate-fly-out" : "opacity-0"
+                     )}
+                 >
+                     <div className="flex items-center">
+                         <Feather className="w-12 h-12" />
+                         <WifiOff className="w-8 h-8 text-red-400 ml-[-10px]" />
+                     </div>
+                 </div>
+
+                {/* Step 4: Final Logo and Text */}
+                 <div className={cn("text-center transition-opacity duration-500", animationStep === 4 ? 'opacity-100' : 'opacity-0')}>
+                    <Feather className="w-24 h-24 mx-auto mb-6 animate-pop-in" />
+                    <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '200ms'}}>FreeBird</h1>
+                    <p className="mt-2 text-lg text-primary-foreground/80 overflow-hidden">
+                       <span className="animate-typing">When the internet dies, FreeBird flies.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 
 const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href }: { icon: React.ElementType, title: string, description: string, isEmergency?: boolean, href: string }) => (
   <Link href={href} className="w-full">
-    <Card className={cn("transform transition-transform hover:scale-105 hover:shadow-xl h-full", isEmergency ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' : 'bg-white dark:bg-card')}>
+    <Card className={cn("transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl h-full", isEmergency ? 'bg-destructive/10 dark:bg-red-900/20 border-destructive/20 dark:border-red-800/50' : 'bg-card')}>
       <CardContent className="flex flex-col items-center justify-center p-6 text-center h-full">
-        <div className={cn("flex items-center justify-center w-16 h-16 mb-4 rounded-full", isEmergency ? 'bg-red-100 dark:bg-red-900/30' : 'bg-blue-50 dark:bg-blue-900/30')}>
-          <Icon className={cn("w-8 h-8", isEmergency ? 'text-red-500' : 'text-primary')} />
+        <div className={cn("flex items-center justify-center w-16 h-16 mb-4 rounded-full", isEmergency ? 'bg-destructive/20' : 'bg-primary/10')}>
+          <Icon className={cn("w-8 h-8", isEmergency ? 'text-destructive' : 'text-primary')} />
         </div>
         <h3 className="mb-1 text-lg font-bold">{title}</h3>
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -42,7 +90,7 @@ export default function FreeBirdPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Show splash screen for 2 seconds
+    }, 5000); // Show splash screen for 5 seconds
     return () => clearTimeout(timer);
   }, []);
 
@@ -54,37 +102,11 @@ export default function FreeBirdPage() {
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
       <header className="sticky top-0 z-40 w-full bg-primary text-primary-foreground shadow-md">
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
-          <div className="flex flex-col">
+          <div className="flex items-center gap-3">
+            <Feather className="w-8 h-8"/>
             <h1 className="text-3xl font-bold tracking-tight font-headline">FreeBird</h1>
-            <p className="text-sm text-primary-foreground/80">Stay Safe, Stay Connected</p>
           </div>
-          <div className="flex items-center gap-4">
-             <div className="items-center hidden gap-4 md:flex">
-                <span className="text-sm font-medium">Status:</span>
-                <div className="flex items-center gap-2 p-1 bg-black/10 rounded-full">
-                   <Button
-                      onClick={() => setStatus('safe')}
-                      size="sm"
-                      className={cn("rounded-full", status === 'safe' ? 'bg-green-500 text-white' : 'bg-transparent text-white/80 hover:bg-white/20')}>
-                      {status === 'safe' && "I'm Safe"}
-                      {status !== 'safe' && "Safe"}
-                    </Button>
-                   <Button
-                      onClick={() => setStatus('help')}
-                      size="sm"
-                      variant="ghost"
-                      className={cn("rounded-full", status === 'help' ? 'bg-yellow-500 text-white' : 'bg-transparent text-white/80 hover:bg-white/20')}>
-                      Help
-                   </Button>
-                   <Button
-                      onClick={() => setStatus('danger')}
-                      size="sm"
-                      variant="ghost"
-                      className={cn("rounded-full", status === 'danger' ? 'bg-red-500 text-white' : 'bg-transparent text-white/80 hover:bg-white/20')}>
-                      Danger
-                   </Button>
-                </div>
-            </div>
+          <div className="flex items-center gap-2">
             <Link href="/settings">
               <Button variant="ghost" size="icon">
                 <Settings className="w-6 h-6" />
@@ -96,7 +118,11 @@ export default function FreeBirdPage() {
 
       <main className="flex-1 p-4 md:p-8">
         <div className="container px-4 mx-auto md:px-6">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 place-items-center">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight">Stay Connected, Stay Safe</h2>
+            <p className="mt-2 text-lg text-muted-foreground">Your reliable off-grid communication tool.</p>
+          </div>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
              <FeatureCard 
                 href="#"
                 icon={Shield}
@@ -120,23 +146,23 @@ export default function FreeBirdPage() {
         </div>
       </main>
       
-      <div className="fixed bottom-6 right-6 flex flex-col items-center gap-3 z-50">
+      <div className="fixed bottom-6 right-6 flex flex-col items-center gap-4 z-50">
         <Button 
           variant="outline"
           size="icon"
-          className="w-14 h-14 rounded-full bg-yellow-400 hover:bg-yellow-500 border-2 border-yellow-500/50 shadow-lg"
+          className="w-14 h-14 rounded-full bg-background border-2 shadow-lg"
           onClick={() => setIsAnonymous(!isAnonymous)}
         >
-          <Ghost className={cn("h-7 w-7", isAnonymous ? 'text-white' : 'text-gray-800')} />
+          <Ghost className={cn("h-7 w-7 transition-colors", isAnonymous ? 'text-primary' : 'text-muted-foreground')} />
         </Button>
         
         <Link href="/guardian/sos">
           <Button
               size="lg"
               variant="destructive"
-              className="relative w-16 h-16 rounded-full shadow-2xl flex items-center justify-center animate-pulse-strong"
+              className="relative w-20 h-20 rounded-full shadow-2xl flex items-center justify-center animate-pulse-strong"
           >
-              <AlertTriangle className="w-8 h-8" />
+              <AlertTriangle className="w-10 h-10" />
               <span className="sr-only">SOS</span>
           </Button>
         </Link>
