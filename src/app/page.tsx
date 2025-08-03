@@ -150,7 +150,7 @@ export default function FreeBirdPage() {
                 <Button
                     size="lg"
                     variant="destructive"
-                    className="w-16 h-16 rounded-full shadow-2xl animate-pulse"
+                    className="relative w-16 h-16 rounded-full shadow-2xl flex items-center justify-center animate-pulse-strong"
                 >
                     <AlertTriangle className="w-8 h-8" />
                     <span className="sr-only">SOS</span>
