@@ -64,9 +64,11 @@ export default function FreeBirdPage() {
                    </Button>
                 </div>
             </div>
-            <Button variant="ghost" size="icon">
-              <Settings className="w-6 h-6" />
-            </Button>
+            <Link href="/settings">
+              <Button variant="ghost" size="icon">
+                <Settings className="w-6 h-6" />
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
