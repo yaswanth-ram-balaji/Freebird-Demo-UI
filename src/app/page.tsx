@@ -58,13 +58,16 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                  </div>
 
                 {/* Step 4 & 5: Final Logo and Text */}
-                 <div className={cn("text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
-                    <SparklesText
-                      text="FreeBird"
-                      className="text-7xl font-bold tracking-tight font-headline animate-pop-in"
-                      colors={{ first: '#FFFFFF', second: '#87CEEB' }}
-                      sparklesCount={20}
-                    />
+                 <div className={cn("flex flex-col items-center justify-center text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
+                    <div className="flex items-center gap-3 animate-pop-in">
+                        <span className="text-7xl">🕊️</span>
+                        <SparklesText
+                          text="FreeBird"
+                          className="text-7xl font-bold tracking-tight font-headline"
+                          colors={{ first: '#FFFFFF', second: '#87CEEB' }}
+                          sparklesCount={20}
+                        />
+                    </div>
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                         {animationStep >= 5 && (
                           <div className="animate-typing inline-block whitespace-nowrap overflow-hidden">
