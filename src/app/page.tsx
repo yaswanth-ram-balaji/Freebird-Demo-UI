@@ -8,9 +8,11 @@ import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff } from 'lu
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
+import { SparklesText } from '@/components/ui/sparkles-text';
 
 const SplashScreen = () => {
     const [animationStep, setAnimationStep] = useState(0);
+    const [showSplash, setShowSplash] = useState(true);
 
     useEffect(() => {
         const timers = [
@@ -19,12 +21,13 @@ const SplashScreen = () => {
             setTimeout(() => setAnimationStep(3), 5000), // Bird flies out
             setTimeout(() => setAnimationStep(4), 7000), // Logo reveal
             setTimeout(() => setAnimationStep(5), 8000), // Typing animation start
+            setTimeout(() => setShowSplash(false), 13000), // Fade out splash
         ];
         return () => timers.forEach(clearTimeout);
     }, []);
 
     return (
-        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000", animationStep >= 5 ? 'opacity-100' : 'opacity-100', animationStep >= 5 && 'fade-out-delayed')}>
+        <div className={cn("flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 transition-opacity duration-1000", !showSplash && 'opacity-0')}>
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0, 1 & 2: Network Symbol */}
                 <div className={cn("absolute transition-opacity duration-500", animationStep >= 3 ? 'opacity-0' : 'opacity-100')}>
@@ -58,7 +61,12 @@ const SplashScreen = () => {
                 {/* Step 4 & 5: Final Logo and Text */}
                  <div className={cn("text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
                     <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '700ms'}}>🕊️</div>
-                    <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '900ms'}}>FreeBird</h1>
+                    <SparklesText
+                      text="FreeBird"
+                      className="text-5xl font-bold tracking-tight font-headline animate-pop-in"
+                      colors={{ first: '#FFFFFF', second: '#87CEEB' }}
+                      sparklesCount={20}
+                    />
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                          {animationStep >= 5 && (
                           <span className="animate-typing inline-block">
@@ -102,12 +110,10 @@ export default function FreeBirdPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
-    return <SplashScreen />;
-  }
-  
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+      {isLoading && <SplashScreen />}
+      
       <header className="sticky top-0 z-40 w-full bg-primary text-primary-foreground shadow-md">
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
           <div className="flex items-center gap-3">
