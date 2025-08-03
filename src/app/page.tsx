@@ -104,8 +104,20 @@ export default function FreeBirdPage() {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const splashShown = sessionStorage.getItem('splashShown');
+    if (splashShown) {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleSplashFinish = () => {
+    sessionStorage.setItem('splashShown', 'true');
+    setIsLoading(false);
+  };
+
   if (isLoading) {
-    return <SplashScreen onFinished={() => setIsLoading(false)} />;
+    return <SplashScreen onFinished={handleSplashFinish} />;
   }
 
   return (
