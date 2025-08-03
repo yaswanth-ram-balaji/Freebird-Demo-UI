@@ -1,17 +1,26 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, MessageSquare, Map, Settings, Ghost } from 'lucide-react';
+import { Shield, AlertTriangle, Users, MessageSquare, Map, Settings, Ghost, Feather } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+
+const SplashScreen = () => (
+  <div className="flex flex-col items-center justify-center h-screen w-screen bg-primary text-primary-foreground absolute inset-0 z-50 animate-out fade-out duration-1000">
+    <div className="text-center animate-in fade-in duration-500">
+      <Feather className="w-24 h-24 mx-auto mb-6" />
+      <h1 className="text-5xl font-bold tracking-tight font-headline">FreeBird</h1>
+      <p className="mt-2 text-lg text-primary-foreground/80">When networks fail, FreeBird flies.</p>
+    </div>
+  </div>
+);
 
 
 const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href }: { icon: React.ElementType, title: string, description: string, isEmergency?: boolean, href: string }) => (
-  <Link href={href}>
+  <Link href={href} className="w-full">
     <Card className={cn("transform transition-transform hover:scale-105 hover:shadow-xl h-full", isEmergency ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' : 'bg-white dark:bg-card')}>
       <CardContent className="flex flex-col items-center justify-center p-6 text-center h-full">
         <div className={cn("flex items-center justify-center w-16 h-16 mb-4 rounded-full", isEmergency ? 'bg-red-100 dark:bg-red-900/30' : 'bg-blue-50 dark:bg-blue-900/30')}>
@@ -28,6 +37,18 @@ const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href
 export default function FreeBirdPage() {
   const [status, setStatus] = useState<'safe' | 'help' | 'danger'>('safe');
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Show splash screen for 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
   
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -75,7 +96,7 @@ export default function FreeBirdPage() {
 
       <main className="flex-1 p-4 md:p-8">
         <div className="container px-4 mx-auto md:px-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 place-items-center">
              <FeatureCard 
                 href="#"
                 icon={Shield}
@@ -95,23 +116,11 @@ export default function FreeBirdPage() {
                 title="Rooms"
                 description="Create or join private communication rooms"
               />
-              <FeatureCard
-                href="#"
-                icon={MessageSquare}
-                title="Public Chat"
-                description="Broadcast messages to all users"
-              />
-              <FeatureCard
-                href="#"
-                icon={Map}
-                title="Map View"
-                description="See nearby users and safety zones"
-              />
           </div>
         </div>
       </main>
       
-      <div className="fixed bottom-6 right-6 flex flex-col items-center gap-3">
+      <div className="fixed bottom-6 right-6 flex flex-col items-center gap-3 z-50">
         <Button 
           variant="outline"
           size="icon"
