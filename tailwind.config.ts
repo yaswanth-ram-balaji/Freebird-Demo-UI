@@ -22,7 +22,7 @@ export default {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         body: ['Inter', 'sans-serif'],
         headline: ['var(--font-headline)', 'sans-serif'],
-        tagline: ['var(--font-tagline)', 'cursive'],
+        tagline: ['var(--font-tagline)', 'serif'],
         code: ['monospace'],
       },
       colors: {
