@@ -3,29 +3,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, MessageSquare, Map, Settings, Ghost, Feather, Wifi, WifiOff } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
-
-
-const BirdSVG = ({ className }: { className?: string }) => (
-    <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        className={className}
-    >
-        <path d="M16 3.01s-2 2-2 4 2 4 2 4-2 2-2 4M10 20.99s-2-2-2-4 2-4 2-4-2-2-2-4"/>
-        <path d="M14 18.01s-2-2-2-4 2-4 2-4-2-2-2-4"/>
-        <path d="M22 3l-6 6-3-3-6 6h-3"/>
-    </svg>
-);
-
 
 const SplashScreen = () => {
     const [animationStep, setAnimationStep] = useState(0);
@@ -52,11 +33,11 @@ const SplashScreen = () => {
                 {/* Step 2: Bird flies in and picks up symbol */}
                 <div 
                     className={cn(
-                        "absolute left-1/2 top-1/2",
+                        "absolute left-1/2 top-1/2 text-5xl",
                         animationStep === 2 ? "animate-fly-in-from-br" : "opacity-0"
                     )}
                 >
-                    <BirdSVG className="w-20 h-20" />
+                    <span>🕊️</span>
                 </div>
                 
                  {/* Step 3: Bird flies out */}
@@ -66,15 +47,15 @@ const SplashScreen = () => {
                         animationStep >= 3 ? "animate-fly-out-to-tl" : "opacity-0"
                      )}
                  >
-                     <div className="flex items-center">
-                         <BirdSVG className="w-16 h-16" />
+                     <div className="flex items-center text-4xl">
+                         <span>🕊️</span>
                          <WifiOff className="w-8 h-8 text-red-400 ml-[-10px] mt-2" />
                      </div>
                  </div>
 
                 {/* Step 4: Final Logo and Text */}
                  <div className={cn("text-center transition-opacity duration-1000", animationStep === 4 ? 'opacity-100' : 'opacity-0')}>
-                    <Feather className="w-24 h-24 mx-auto mb-6 animate-pop-in" style={{animationDelay: '500ms'}} />
+                    <div className="text-7xl mx-auto mb-6 animate-pop-in" style={{animationDelay: '500ms'}}>🕊️</div>
                     <h1 className="text-5xl font-bold tracking-tight font-headline animate-pop-in" style={{animationDelay: '700ms'}}>FreeBird</h1>
                     <div className="mt-4 text-lg text-primary-foreground/80 overflow-hidden">
                        <span className="animate-typing">When the internet dies, FreeBird flies.</span>
@@ -102,7 +83,6 @@ const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href
 
 
 export default function FreeBirdPage() {
-  const [status, setStatus] = useState<'safe' | 'help' | 'danger'>('safe');
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -122,7 +102,7 @@ export default function FreeBirdPage() {
       <header className="sticky top-0 z-40 w-full bg-primary text-primary-foreground shadow-md">
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
           <div className="flex items-center gap-3">
-            <Feather className="w-8 h-8"/>
+            <span className="text-3xl">🕊️</span>
             <h1 className="text-3xl font-bold tracking-tight font-headline">FreeBird</h1>
           </div>
           <div className="flex items-center gap-2">
