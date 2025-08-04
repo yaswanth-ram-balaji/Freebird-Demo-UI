@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/sheet"
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAnonymity } from '@/context/anonymity-provider';
+import { getAiResponse } from '@/ai/flows/chat-flow';
 
 const NoChatSelected = () => (
   <div className="flex flex-col items-center justify-center h-full text-center bg-gray-100 dark:bg-gray-900/50 p-4">
@@ -42,9 +43,11 @@ export default function RoomsPage() {
   useEffect(() => {
     if (!isMobile) {
         // Set a default chat on desktop
-        setSelectedChatId('chat1');
+        if(!selectedChatId && chats.length > 0){
+            setSelectedChatId(chats[0].id);
+        }
     }
-  }, [isMobile]);
+  }, [isMobile, selectedChatId, chats]);
 
   const handleSelectChat = (chatId: string) => {
     setSelectedChatId(chatId);
@@ -53,7 +56,7 @@ export default function RoomsPage() {
     }
   };
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     if (!selectedChatId) return;
 
     const newMessage: Message = {
@@ -63,19 +66,52 @@ export default function RoomsPage() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(' ', ''),
     };
 
-    setChats(prevChats =>
-      prevChats.map(chat => {
-        if (chat.id === selectedChatId) {
-          return {
-            ...chat,
-            messages: [...chat.messages, newMessage],
-            lastMessage: text,
-            lastMessageTime: newMessage.timestamp,
-          };
-        }
-        return chat;
-      })
-    );
+    const updatedChats = chats.map(chat => {
+      if (chat.id === selectedChatId) {
+        return {
+          ...chat,
+          messages: [...chat.messages, newMessage],
+          lastMessage: text,
+          lastMessageTime: newMessage.timestamp,
+        };
+      }
+      return chat;
+    })
+    setChats(updatedChats);
+    
+    // AI reply logic
+    const currentChat = updatedChats.find(c => c.id === selectedChatId);
+    if (currentChat) {
+      setIsAiReplying(true);
+      try {
+        const aiResponse = await getAiResponse(currentChat.messages);
+        
+        const aiMessage: Message = {
+            id: `m-${Date.now() + 1}`,
+            senderId: 'user2', // Simulate reply from Alex
+            text: aiResponse,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(' ', ''),
+        };
+        
+         setChats(prevChats =>
+          prevChats.map(chat => {
+            if (chat.id === selectedChatId) {
+              return {
+                ...chat,
+                messages: [...chat.messages, aiMessage],
+                lastMessage: aiResponse,
+                lastMessageTime: aiMessage.timestamp,
+              };
+            }
+            return chat;
+          })
+        );
+      } catch (error) {
+        console.error("Failed to get AI response:", error);
+      } finally {
+        setIsAiReplying(false);
+      }
+    }
   };
   
   const handleStatusChange = (status: User['status']) => {

@@ -1,3 +1,4 @@
+import { z } from 'zod';
 
 export type User = {
   id: string;
@@ -7,13 +8,15 @@ export type User = {
   anonymous: boolean;
 };
 
-export type Message = {
-  id: string;
-  senderId: string;
-  text: string;
-  timestamp: string;
-  reactions?: { [emoji: string]: number };
-};
+export const MessageSchema = z.object({
+  id: z.string(),
+  senderId: z.string(),
+  text: z.string(),
+  timestamp: z.string(),
+  reactions: z.optional(z.record(z.string(), z.number())),
+});
+export type Message = z.infer<typeof MessageSchema>;
+
 
 export type Chat = {
   id: string;
