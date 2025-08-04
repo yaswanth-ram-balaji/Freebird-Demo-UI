@@ -86,7 +86,7 @@ export function Header({
         ) : (
           <Shield className="h-8 w-8 text-primary" />
         )}
-        <h1 className="text-xl font-headline font-bold text-foreground">{title || 'GuardianLink'}</h1>
+        <h1 className="text-xl font-headline font-bold text-foreground">{title || 'FreeBird'}</h1>
       </div>
 
       <DropdownMenu>

@@ -12,7 +12,7 @@ import * as React from 'react';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600'] });
 
 export const metadata: Metadata = {
-  title: 'GuardianLink',
+  title: 'FreeBird',
   description: 'Stay Safe, Stay Connected',
 };
 

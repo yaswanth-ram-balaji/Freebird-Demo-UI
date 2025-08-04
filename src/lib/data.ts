@@ -62,7 +62,7 @@ export const chats: Chat[] = [
     name: 'Public Broadcast',
     participants: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10', 'user11', 'user12'],
     messages: [
-      { id: 'm1-1', senderId: 'user6', text: '[ADMIN] Welcome to the GuardianLink demo! This is a public channel for all users.', timestamp: '10:30 AM', reactions: { '👍': 5 } },
+      { id: 'm1-1', senderId: 'user6', text: '[ADMIN] Welcome to the FreeBird demo! This is a public channel for all users.', timestamp: '10:30 AM', reactions: { '👍': 5 } },
       { id: 'm1-2', senderId: 'user2', text: 'Hey everyone! Hope you are having a great day.', timestamp: '10:31 AM', reactions: { '❤️': 2 } },
       { id: 'm1-3', senderId: 'user4', text: 'This app looks promising! Great for staying connected.', timestamp: '11:15 AM' },
       { id: 'm1-4', senderId: 'user7', text: 'Agreed. The safety features are a huge plus.', timestamp: '11:17 AM', reactions: { '👍': 1 } },

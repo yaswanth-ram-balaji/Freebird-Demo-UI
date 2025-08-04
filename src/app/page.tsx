@@ -65,7 +65,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <div className="flex flex-col items-center animate-pop-in">
                         <span className="text-7xl">🕊️</span>
                         <SparklesText
-                          text="GuardianLink"
+                          text="FreeBird"
                           className="text-7xl font-bold tracking-tight font-headline"
                           colors={{ first: '#FFFFFF', second: '#87CEEB' }}
                           sparklesCount={20}
@@ -76,7 +76,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                           <div className="animate-typing inline-block whitespace-nowrap overflow-hidden font-serif">
                             <span className="text-white">When the internet </span>
                             <span className="text-red-400">dies, </span>
-                            <span className="text-white">GuardianLink </span>
+                            <span className="text-white">FreeBird </span>
                             <span className="text-green-400">connects.</span>
                           </div>
                         )}
@@ -132,7 +132,7 @@ export default function GuardianLinkPage() {
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
           <div className="flex items-center gap-3">
             <span className="text-3xl">🕊️</span>
-            <h1 className="text-3xl font-bold tracking-tight font-headline">GuardianLink</h1>
+            <h1 className="text-3xl font-bold tracking-tight font-headline">FreeBird</h1>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/settings">
