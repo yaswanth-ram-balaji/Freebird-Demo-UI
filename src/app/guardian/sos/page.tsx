@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 export default function SOSPage() {
   const [isSending, setIsSending] = useState(false);
   const [isSilent, setIsSilent] = useState(false);
+  const [sendLocation, setSendLocation] = useState(true);
   const [message, setMessage] = useState('');
   const { toast } = useToast();
 
@@ -23,6 +24,9 @@ export default function SOSPage() {
     // Simulate sending SOS
     setTimeout(() => {
       let description = `Your emergency alert has been broadcasted ${isSilent ? 'silently' : 'loudly'}.`;
+      if (sendLocation) {
+        description += ' Your location has been shared.';
+      }
       if (message) {
         description += ` Message: "${message}"`;
       }
@@ -49,7 +53,7 @@ export default function SOSPage() {
         <AlertTriangle className="h-16 w-16 text-destructive mb-4" />
         <h1 className="text-3xl font-bold mb-2">EMERGENCY SOS</h1>
         <p className="text-lg text-gray-400 mb-8 max-w-md">
-          This will send an alert with your location and an optional message to your trusted contacts and nearby users.
+          This will send an alert to your trusted contacts and nearby users.
         </p>
 
         <div className="w-full max-w-sm space-y-6">
@@ -64,11 +68,20 @@ export default function SOSPage() {
             />
           </div>
           
-          <div className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50">
-            <Label htmlFor="silent-mode" className="text-base">
-              Send Silently
-            </Label>
-            <Switch id="silent-mode" checked={isSilent} onCheckedChange={setIsSilent} />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50">
+              <Label htmlFor="location-mode" className="flex items-center gap-2 text-base">
+                <Globe className="h-5 w-5" />
+                Share Location
+              </Label>
+              <Switch id="location-mode" checked={sendLocation} onCheckedChange={setSendLocation} />
+            </div>
+            <div className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50">
+              <Label htmlFor="silent-mode" className="text-base">
+                Send Silently
+              </Label>
+              <Switch id="silent-mode" checked={isSilent} onCheckedChange={setIsSilent} />
+            </div>
           </div>
           
           <div className="relative flex items-center justify-center w-full h-32">
