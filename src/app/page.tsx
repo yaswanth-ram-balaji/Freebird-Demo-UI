@@ -156,12 +156,6 @@ export default function GuardianLinkPage() {
             <p className="mt-2 text-lg text-muted-foreground">Your reliable off-grid communication tool.</p>
           </div>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
-             <FeatureCard 
-                href="/guardian/safety"
-                icon={Shield}
-                title="Women's Safety"
-                description="Secure communication and emergency features"
-              />
              <FeatureCard
                 href="/guardian/sos"
                 icon={AlertTriangle}
@@ -169,11 +163,11 @@ export default function GuardianLinkPage() {
                 description="Instant SOS alerts and emergency response"
                 isEmergency
               />
-               <FeatureCard
-                href="/guardian/group-rooms"
-                icon={PlusSquare}
-                title="Rooms"
-                description="Create or join private group chats"
+             <FeatureCard 
+                href="/guardian/safety"
+                icon={Shield}
+                title="Women's Safety"
+                description="Secure communication and emergency features"
               />
               <FeatureCard
                 href="/guardian/broadcast"
@@ -186,6 +180,12 @@ export default function GuardianLinkPage() {
                 icon={Lock}
                 title="Private Chat"
                 description="Request-based direct messaging"
+              />
+              <FeatureCard
+                href="/guardian/group-rooms"
+                icon={PlusSquare}
+                title="Rooms"
+                description="Create or join private group chats"
               />
           </div>
         </div>
