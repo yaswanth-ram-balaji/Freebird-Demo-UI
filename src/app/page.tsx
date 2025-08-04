@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, Settings, Ghost, MessageSquare, Lock, PlusSquare } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Settings, MessageSquare, Lock, PlusSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -104,7 +104,6 @@ const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href
 
 
 export default function FreeBirdPage() {
-  const { isAnonymous, setIsAnonymous } = useAnonymity();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
