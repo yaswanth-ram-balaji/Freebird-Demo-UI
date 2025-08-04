@@ -34,22 +34,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { useTheme } from '@/context/theme-provider';
 
 type HeaderProps = {
   currentUser: User;
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
   onStatusChange: (status: 'safe' | 'help' | 'danger') => void;
   onToggleAnonymous: () => void;
 };
 
 export function Header({
   currentUser,
-  isDarkMode,
-  onToggleDarkMode,
   onStatusChange,
   onToggleAnonymous,
 }: HeaderProps) {
+
+  const { theme, setTheme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
+  const toggleDarkMode = () => {
+    setTheme(isDarkMode ? 'light' : 'dark');
+  };
 
   const StatusIcon = ({ status }: { status: User['status'] }) => {
     switch (status) {
@@ -133,7 +137,7 @@ export function Header({
                 <Switch
                   id="dark-mode"
                   checked={isDarkMode}
-                  onCheckedChange={onToggleDarkMode}
+                  onCheckedChange={toggleDarkMode}
                 />
                </div>
             </DropdownMenuItem>

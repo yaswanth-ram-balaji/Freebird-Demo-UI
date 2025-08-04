@@ -30,14 +30,11 @@ export default function RoomsPage() {
   const [chats, setChats] = useState<Chat[]>(initialChats);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 
   useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setIsDarkMode(isDark);
     if (!isMobile) {
         // Set a default chat on desktop
         setSelectedChatId('chat1');
@@ -85,18 +82,6 @@ export default function RoomsPage() {
     setCurrentUser(prevUser => ({...prevUser, anonymous: !prevUser.anonymous}));
   }
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => {
-      const isDark = !prev;
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-      return isDark;
-    });
-  };
-
   const selectedChat = chats.find(c => c.id === selectedChatId);
 
   const sidebarContent = (
@@ -113,8 +98,6 @@ export default function RoomsPage() {
     <div className="flex flex-col h-screen bg-background">
       <Header 
         currentUser={currentUser} 
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={toggleDarkMode}
         onStatusChange={handleStatusChange}
         onToggleAnonymous={handleToggleAnonymous}
       />

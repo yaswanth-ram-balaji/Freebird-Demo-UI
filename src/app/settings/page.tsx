@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, User, Bell, Shield, Moon, Sun, Palette, QrCode, LogOut, Ghost, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { useTheme } from '@/context/theme-provider';
 
 const SettingsItem = ({ icon: Icon, title, description, action }: { icon: React.ElementType, title: string, description?: string, action: React.ReactNode }) => (
   <div className="flex items-center py-4">
@@ -25,21 +26,13 @@ const SettingsItem = ({ icon: Icon, title, description, action }: { icon: React.
 );
 
 export default function SettingsPage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [isAnonymous, setIsAnonymous] = useState(true);
 
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setIsDarkMode(isDark);
-  }, []);
+  const isDarkMode = theme === 'dark';
 
   const toggleDarkMode = (checked: boolean) => {
-    setIsDarkMode(checked);
-    if (checked) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    setTheme(checked ? 'dark' : 'light');
   };
 
   return (
