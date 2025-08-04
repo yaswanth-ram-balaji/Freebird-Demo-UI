@@ -196,6 +196,26 @@ function RoomsPageContent() {
   
   const selectedChat = chats.find(c => c.id === selectedChatId);
 
+  // If a chat is selected, show only the chat view (focused mode)
+  if (selectedChat) {
+    return (
+       <div className="flex flex-col h-screen bg-background">
+          <main className="flex-1 flex flex-col">
+              <ChatView
+                chat={selectedChat}
+                users={users}
+                currentUser={currentUser}
+                onSendMessage={handleSendMessage}
+                onReactToMessage={handleReactToMessage}
+                isAiReplying={isAiReplying}
+              />
+          </main>
+          <SOSButton />
+       </div>
+    );
+  }
+
+  // If no chat is selected, show the sidebar and the main content area
   const sidebarContent = (
     <ChatSidebar
       chats={activeChats}
@@ -231,18 +251,7 @@ function RoomsPageContent() {
         )}
 
         <main className="flex-1 flex flex-col">
-          {selectedChat ? (
-            <ChatView
-              chat={selectedChat}
-              users={users}
-              currentUser={currentUser}
-              onSendMessage={handleSendMessage}
-              onReactToMessage={handleReactToMessage}
-              isAiReplying={isAiReplying}
-            />
-          ) : (
-             isMounted && (isMobile ? null : <NoChatSelected />)
-          )}
+          { isMounted && (isMobile ? null : <NoChatSelected />) }
         </main>
       </div>
       <SOSButton />
