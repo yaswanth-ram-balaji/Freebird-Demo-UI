@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Paperclip, Send, Smile, Copy, Bot, MoreVertical, LogOut, Download, FileText, Image as ImageIcon, Video, Pin, MessageSquare, Files, X, Megaphone, SendHorizonal } from 'lucide-react';
+import { Paperclip, Send, Smile, Copy, Bot, MoreVertical, LogOut, Download, FileText, Image as ImageIcon, Video, Pin, MessageSquare, Files, X, Megaphone, SendHorizonal, Users } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   DropdownMenu,
@@ -160,12 +160,20 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
             </Avatar>
             <div>
                 <h3 className="font-bold text-lg">{chatDetails.name}</h3>
-                <div className="flex items-center gap-2">
-                    <p className="text-sm text-muted-foreground">Code:</p>
-                    <Badge variant="outline" className="cursor-pointer" onClick={handleCopyCode}>
-                        {chat.code || 'N/A'}
-                        <Copy className="ml-2 h-3 w-3" />
-                    </Badge>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                        <span>Code:</span>
+                        <Badge variant="outline" className="cursor-pointer" onClick={handleCopyCode}>
+                            {chat.code || 'N/A'}
+                            <Copy className="ml-2 h-3 w-3" />
+                        </Badge>
+                    </div>
+                    {chat.type === 'group' && (
+                        <div className="flex items-center gap-1">
+                            <Users className="h-4 w-4" />
+                            <span>{chat.participants.length} / 100</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

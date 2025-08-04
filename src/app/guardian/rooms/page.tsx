@@ -21,6 +21,10 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 
+const STORAGE_KEY = 'guardianlink-group-chats';
+const ALL_CHATS_STORAGE_KEY = 'guardianlink-all-chats';
+
+
 const NoChatSelected = () => (
   <div className="flex flex-col items-center justify-center h-full text-center bg-gray-100 dark:bg-gray-900/50 p-4">
     <MessageSquarePlus className="w-20 h-20 text-muted-foreground mb-4" />
@@ -33,21 +37,57 @@ function RoomsPageContent() {
   const searchParams = useSearchParams();
   const requestedChatId = searchParams.get('chatId');
 
-  const [chats, setChats] = useState<Chat[]>(initialChats);
+  const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAnonymous } = useAnonymity();
   const [isAiReplying, setIsAiReplying] = useState(false);
-  
-  const activeChats = chats.filter(c => c.type !== 'public' && c.participants.includes(currentUser.id));
+  const [isMounted, setIsMounted] = React.useState(false);
   
   useEffect(() => {
-    if (requestedChatId) {
-      setSelectedChatId(requestedChatId);
+    setIsMounted(true);
+    try {
+        // Load both private/public chats and group chats
+        const storedAllChats = localStorage.getItem(ALL_CHATS_STORAGE_KEY);
+        const allChats = storedAllChats ? JSON.parse(storedAllChats) : initialChats.filter(c => c.type !== 'group');
+
+        const storedGroupChats = localStorage.getItem(STORAGE_KEY);
+        const groupChats = storedGroupChats ? JSON.parse(storedGroupChats) : [];
+
+        // Combine them, ensuring no duplicate groups if they were in initialChats
+        const combinedChats = [...allChats.filter((c: Chat) => c.type !== 'group'), ...groupChats];
+        
+        setChats(combinedChats);
+
+        // If coming from group rooms, a chatId might be present
+        if (requestedChatId) {
+          setSelectedChatId(requestedChatId);
+        }
+
+    } catch (error) {
+        console.error("Failed to load chats from localStorage", error);
+        setChats(initialChats);
     }
   }, [requestedChatId]);
+
+  useEffect(() => {
+    if (isMounted) {
+        try {
+            // Save all chats back to a single key to persist messages etc.
+            // We separate group chats for the group list page, but here we need the whole state.
+            const groupChats = chats.filter(c => c.type === 'group');
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(groupChats));
+            localStorage.setItem(ALL_CHATS_STORAGE_KEY, JSON.stringify(chats));
+
+        } catch (error) {
+            console.error("Failed to save chats to localStorage", error);
+        }
+    }
+  }, [chats, isMounted]);
+
+  const activeChats = chats.filter(c => c.type !== 'public' && c.participants.includes(currentUser.id));
 
   useEffect(() => {
     setCurrentUser(prevUser => ({ ...prevUser, anonymous: isAnonymous }));
@@ -93,7 +133,7 @@ function RoomsPageContent() {
     
     // AI reply logic
     const currentChat = updatedChats.find(c => c.id === selectedChatId);
-    if (currentChat && currentChat.type !== 'public') {
+    if (currentChat && currentChat.participants.includes('user2') && currentChat.type !== 'public') {
       setIsAiReplying(true);
       try {
         const aiResponse = await getAiResponse(currentChat.messages);
@@ -201,7 +241,7 @@ function RoomsPageContent() {
               isAiReplying={isAiReplying}
             />
           ) : (
-             isMobile ? null : <NoChatSelected />
+             isMounted && (isMobile ? null : <NoChatSelected />)
           )}
         </main>
       </div>
