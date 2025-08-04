@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff, MessageSquare, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -65,7 +65,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <div className="flex flex-col items-center animate-pop-in">
                         <span className="text-7xl">🕊️</span>
                         <SparklesText
-                          text="FreeBird"
+                          text="GuardianLink"
                           className="text-7xl font-bold tracking-tight font-headline"
                           colors={{ first: '#FFFFFF', second: '#87CEEB' }}
                           sparklesCount={20}
@@ -76,8 +76,8 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                           <div className="animate-typing inline-block whitespace-nowrap overflow-hidden font-serif">
                             <span className="text-white">When the internet </span>
                             <span className="text-red-400">dies, </span>
-                            <span className="text-white">FreeBird </span>
-                            <span className="text-green-400">flies.</span>
+                            <span className="text-white">GuardianLink </span>
+                            <span className="text-green-400">connects.</span>
                           </div>
                         )}
                     </div>
@@ -106,7 +106,7 @@ const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href
 );
 
 
-export default function FreeBirdPage() {
+export default function GuardianLinkPage() {
   const { isAnonymous, setIsAnonymous } = useAnonymity();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -132,12 +132,17 @@ export default function FreeBirdPage() {
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
           <div className="flex items-center gap-3">
             <span className="text-3xl">🕊️</span>
-            <h1 className="text-3xl font-bold tracking-tight font-headline">FreeBird</h1>
+            <h1 className="text-3xl font-bold tracking-tight font-headline">GuardianLink</h1>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/settings">
               <Button variant="ghost" size="icon">
                 <Settings className="w-6 h-6" />
+              </Button>
+            </Link>
+             <Link href="/guardian/rooms">
+              <Button variant="ghost" size="icon">
+                <Users className="w-6 h-6" />
               </Button>
             </Link>
           </div>
@@ -150,7 +155,7 @@ export default function FreeBirdPage() {
             <h2 className="text-3xl font-bold tracking-tight">Stay Connected, Stay Safe</h2>
             <p className="mt-2 text-lg text-muted-foreground">Your reliable off-grid communication tool.</p>
           </div>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 place-items-stretch">
              <FeatureCard 
                 href="/guardian/safety"
                 icon={Shield}
@@ -165,10 +170,16 @@ export default function FreeBirdPage() {
                 isEmergency
               />
               <FeatureCard
-                href="/guardian/rooms"
-                icon={Users}
-                title="Rooms"
-                description="Create or join private communication rooms"
+                href="/guardian/broadcast"
+                icon={MessageSquare}
+                title="Public Broadcast"
+                description="Send a message to all nearby users"
+              />
+              <FeatureCard
+                href="/guardian/private"
+                icon={Lock}
+                title="Private Chat"
+                description="Request-based direct messaging"
               />
           </div>
         </div>
