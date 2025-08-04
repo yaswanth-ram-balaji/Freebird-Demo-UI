@@ -10,7 +10,6 @@ import { chats as initialChats, users, currentUser as initialUser } from '@/lib/
 import type { Chat, Message, User } from '@/lib/data';
 import { MessageSquarePlus, PanelLeft, Loader } from 'lucide-react';
 import { Header } from '@/components/guardian/header';
-import { SOSButton } from '@/components/guardian/sos-button';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -210,7 +209,6 @@ function RoomsPageContent() {
                 isAiReplying={isAiReplying}
               />
           </main>
-          <SOSButton />
        </div>
     );
   }
@@ -254,7 +252,6 @@ function RoomsPageContent() {
           { isMounted && (isMobile ? null : <NoChatSelected />) }
         </main>
       </div>
-      <SOSButton />
     </div>
   );
 }

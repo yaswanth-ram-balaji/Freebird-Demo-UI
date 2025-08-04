@@ -8,7 +8,6 @@ import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
 import type { Chat, Message, User } from '@/lib/data';
 import { Header } from '@/components/guardian/header';
-import { SOSButton } from '@/components/guardian/sos-button';
 import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useRouter } from 'next/navigation';
@@ -149,7 +148,6 @@ export default function BroadcastPage() {
             isAiReplying={isAiReplying}
           />
       </main>
-      <SOSButton />
     </div>
   );
 }
