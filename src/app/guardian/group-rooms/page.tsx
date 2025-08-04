@@ -214,10 +214,6 @@ export default function GroupRoomsPage() {
                                 variant="destructive"
                                 size="icon"
                                 className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                }}
                             >
                                 <Trash2 className="h-4 w-4" />
                             </Button>
@@ -232,11 +228,9 @@ export default function GroupRoomsPage() {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    handleDeleteRoom(chat.id, chat.name);
-                                }}>Delete</AlertDialogAction>
+                                <AlertDialogAction onClick={() => handleDeleteRoom(chat.id, chat.name)}>
+                                    Delete
+                                </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
