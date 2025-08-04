@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 export type User = {
@@ -59,10 +60,10 @@ export const chats: Chat[] = [
     name: 'Public Broadcast',
     participants: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10', 'user11', 'user12'],
     messages: [
-      { id: 'm1-1', senderId: 'user6', text: '[ADMIN] Welcome to the FreeBird demo! This is a public channel for all users.', timestamp: '10:30 AM' },
-      { id: 'm1-2', senderId: 'user2', text: 'Hey everyone! Hope you are having a great day.', timestamp: '10:31 AM' },
+      { id: 'm1-1', senderId: 'user6', text: '[ADMIN] Welcome to the FreeBird demo! This is a public channel for all users.', timestamp: '10:30 AM', reactions: { '👍': 5 } },
+      { id: 'm1-2', senderId: 'user2', text: 'Hey everyone! Hope you are having a great day.', timestamp: '10:31 AM', reactions: { '❤️': 2 } },
       { id: 'm1-3', senderId: 'user4', text: 'This app looks promising! Great for staying connected.', timestamp: '11:15 AM' },
-      { id: 'm1-4', senderId: 'user7', text: 'Agreed. The safety features are a huge plus.', timestamp: '11:17 AM' },
+      { id: 'm1-4', senderId: 'user7', text: 'Agreed. The safety features are a huge plus.', timestamp: '11:17 AM', reactions: { '👍': 1 } },
       { id: 'm1-5', senderId: 'user8', text: 'Remember to check out the map view to see where your friends are.', timestamp: '11:20 AM' },
       { id: 'm1-6', senderId: 'user6', text: '[ADMIN] Reminder: The "Emergency" button is for demo purposes. In a real scenario, it would contact authorities.', timestamp: '11:22 AM' },
     ],
@@ -77,7 +78,7 @@ export const chats: Chat[] = [
     participants: ['user1', 'user3', 'user4'],
     messages: [
       { id: 'm2-1', senderId: 'user3', text: 'Alright team, let\'s get this demo ready!', timestamp: 'Yesterday' },
-      { id: 'm2-2', senderId: 'user1', text: 'I\'ve updated the UI components. Let me know what you think.', timestamp: 'Yesterday' },
+      { id: 'm2-2', senderId: 'user1', text: 'I\'ve updated the UI components. Let me know what you think.', timestamp: 'Yesterday', reactions: { '👍': 1, '🚀': 1 } },
       { id: 'm2-3', senderId: 'user4', text: 'Looks great! Let\'s test the SOS flow.', timestamp: '9:00 AM' },
     ],
     lastMessage: 'Looks great! Let\'s test the SOS flow.',
@@ -90,7 +91,7 @@ export const chats: Chat[] = [
     participants: ['user1', 'user2'],
     messages: [
       { id: 'm3-1', senderId: 'user2', text: 'Hey, can you double-check the presentation slides?', timestamp: '1:20 PM' },
-       { id: 'm3-2', senderId: 'user1', text: 'Sure, I\'ll take a look now.', timestamp: '1:21 PM' },
+       { id: 'm3-2', senderId: 'user1', text: 'Sure, I\'ll take a look now.', timestamp: '1:21 PM', reactions: { '👍': 1 } },
     ],
     lastMessage: 'Sure, I\'ll take a look now.',
     lastMessageTime: '1:21 PM',
@@ -103,7 +104,7 @@ export const chats: Chat[] = [
     messages: [
       { id: 'm4-1', senderId: 'user5', text: 'I think I\'m lost, can you see my location on the map?', timestamp: '9:05 AM' },
       { id: 'm4-2', senderId: 'user1', text: 'Checking now... looks like you\'re near the main auditorium.', timestamp: '9:06 AM' },
-      { id: 'm4-3', senderId: 'user5', text: 'Help me!', timestamp: '9:07 AM' },
+      { id: 'm4-3', senderId: 'user5', text: 'Help me!', timestamp: '9:07 AM', reactions: { '😢': 1 } },
     ],
     lastMessage: 'Help me!',
     lastMessageTime: '9:07 AM',

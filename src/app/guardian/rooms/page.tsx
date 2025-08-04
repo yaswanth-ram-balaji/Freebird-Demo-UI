@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -113,6 +114,29 @@ export default function RoomsPage() {
       }
     }
   };
+
+  const handleReactToMessage = (messageId: string, emoji: string) => {
+    if (!selectedChatId) return;
+
+    setChats(prevChats =>
+      prevChats.map(chat => {
+        if (chat.id === selectedChatId) {
+          return {
+            ...chat,
+            messages: chat.messages.map(message => {
+              if (message.id === messageId) {
+                const newReactions = { ...(message.reactions || {}) };
+                newReactions[emoji] = (newReactions[emoji] || 0) + 1;
+                return { ...message, reactions: newReactions };
+              }
+              return message;
+            }),
+          };
+        }
+        return chat;
+      })
+    );
+  };
   
   const handleStatusChange = (status: User['status']) => {
     setCurrentUser(prevUser => ({...prevUser, status}));
@@ -160,6 +184,7 @@ export default function RoomsPage() {
               users={users}
               currentUser={currentUser}
               onSendMessage={handleSendMessage}
+              onReactToMessage={handleReactToMessage}
               isAiReplying={isAiReplying}
             />
           ) : (

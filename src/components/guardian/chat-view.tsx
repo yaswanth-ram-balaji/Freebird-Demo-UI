@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -8,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Paperclip, Send, Smile, Copy, Bot } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Tooltip,
   TooltipContent,
@@ -23,10 +25,23 @@ type ChatViewProps = {
   users: User[];
   currentUser: User;
   onSendMessage: (text: string) => void;
+  onReactToMessage: (messageId: string, emoji: string) => void;
   isAiReplying?: boolean;
 };
 
-export function ChatView({ chat, users, currentUser, onSendMessage, isAiReplying = false }: ChatViewProps) {
+const ReactionPicker = ({ onSelect }: { onSelect: (emoji: string) => void }) => (
+  <PopoverContent className="p-1 w-auto">
+    <div className="flex gap-1">
+      {['👍', '❤️', '😂', '😮', '😢', '🙏'].map(emoji => (
+        <Button key={emoji} variant="ghost" size="icon" className="h-8 w-8 text-xl" onClick={() => onSelect(emoji)}>
+          {emoji}
+        </Button>
+      ))}
+    </div>
+  </PopoverContent>
+);
+
+export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMessage, isAiReplying = false }: ChatViewProps) {
   const [message, setMessage] = React.useState('');
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -127,7 +142,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage, isAiReplying
             return (
               <div
                 key={msg.id}
-                className={cn('flex items-end gap-3 animate-in fade-in-50 duration-500', isCurrentUser ? 'justify-end' : 'justify-start')}
+                className={cn('flex items-end gap-3 animate-in fade-in-50 duration-500 group relative', isCurrentUser ? 'justify-end' : 'justify-start')}
               >
                 {!isCurrentUser && (
                   <TooltipProvider>
@@ -144,17 +159,37 @@ export function ChatView({ chat, users, currentUser, onSendMessage, isAiReplying
                     </Tooltip>
                   </TooltipProvider>
                 )}
+                
                 <div
                   className={cn(
-                    'max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl relative group',
+                    'max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl',
                     isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-card text-card-foreground rounded-bl-none border'
                   )}
                 >
                   {!isCurrentUser && <p className="text-xs font-semibold text-primary mb-1">{sender.name}</p>}
                   <p className="whitespace-pre-wrap">{msg.text}</p>
                   <p className="text-xs mt-1 text-right opacity-70">{msg.timestamp}</p>
-                  <button className="absolute -bottom-3 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><Smile size={16} className="text-muted-foreground hover:text-foreground"/></button>
+                  {msg.reactions && (
+                    <div className="flex gap-1 mt-1 flex-wrap">
+                      {Object.entries(msg.reactions).map(([emoji, count]) => (
+                        <button key={emoji} onClick={() => onReactToMessage(msg.id, emoji)} className="px-2 py-0.5 bg-background/20 dark:bg-foreground/20 rounded-full text-xs flex items-center gap-1 hover:bg-background/30">
+                          <span>{emoji}</span>
+                          <span>{count}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className={cn("absolute -bottom-3 opacity-0 group-hover:opacity-100 transition-opacity", isCurrentUser ? "right-10" : "left-10" )}>
+                      <Smile size={16} className="text-muted-foreground hover:text-foreground"/>
+                    </button>
+                  </PopoverTrigger>
+                  <ReactionPicker onSelect={(emoji) => onReactToMessage(msg.id, emoji)} />
+                </Popover>
+
                 {isCurrentUser && (
                   <TooltipProvider>
                     <Tooltip>
