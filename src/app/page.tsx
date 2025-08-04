@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { SparklesText } from '@/components/ui/sparkles-text';
+import { SOSButton } from '@/components/guardian/sos-button';
 
 const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
     const [animationStep, setAnimationStep] = useState(0);
@@ -178,16 +179,7 @@ export default function FreeBirdPage() {
           <Ghost className={cn("h-7 w-7 transition-colors", isAnonymous ? 'text-primary' : 'text-muted-foreground')} />
         </Button>
         
-        <Link href="/guardian/sos">
-          <Button
-              size="lg"
-              variant="destructive"
-              className="relative w-20 h-20 rounded-full shadow-2xl flex items-center justify-center animate-pulse-strong"
-          >
-              <AlertTriangle className="w-10 h-10" />
-              <span className="sr-only">SOS</span>
-          </Button>
-        </Link>
+        <SOSButton />
       </div>
     </div>
   );
