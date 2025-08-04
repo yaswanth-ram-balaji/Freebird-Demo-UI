@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff, MessageSquare, Lock } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff, MessageSquare, Lock, PlusSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -155,7 +155,7 @@ export default function GuardianLinkPage() {
             <h2 className="text-3xl font-bold tracking-tight">Stay Connected, Stay Safe</h2>
             <p className="mt-2 text-lg text-muted-foreground">Your reliable off-grid communication tool.</p>
           </div>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 place-items-stretch">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
              <FeatureCard 
                 href="/guardian/safety"
                 icon={Shield}
@@ -168,6 +168,12 @@ export default function GuardianLinkPage() {
                 title="Emergency"
                 description="Instant SOS alerts and emergency response"
                 isEmergency
+              />
+               <FeatureCard
+                href="/guardian/group-rooms"
+                icon={PlusSquare}
+                title="Rooms"
+                description="Create or join private group chats"
               />
               <FeatureCard
                 href="/guardian/broadcast"

@@ -28,6 +28,8 @@ export type Chat = {
   lastMessage?: string;
   lastMessageTime?: string;
   unreadCount?: number;
+  code?: string;
+  createdAt?: Date;
 };
 
 export const currentUser: User = {
@@ -84,6 +86,8 @@ export const chats: Chat[] = [
     lastMessage: 'Looks great! Let\'s test the SOS flow.',
     lastMessageTime: '9:00 AM',
     unreadCount: 1,
+    code: 'HACK24',
+    createdAt: new Date('2025-08-01'),
   },
   {
     id: 'chat3',
@@ -109,5 +113,17 @@ export const chats: Chat[] = [
     lastMessage: 'Help me!',
     lastMessageTime: '9:07 AM',
     unreadCount: 1,
+  },
+  {
+    id: 'chat5',
+    type: 'group',
+    name: 'Maths Study Group',
+    participants: ['user1', 'user7', 'user9'],
+    messages: [],
+    lastMessage: 'Room created',
+    lastMessageTime: '10:00 AM',
+    unreadCount: 0,
+    code: 'NPHL5U',
+    createdAt: new Date('2025-08-03'),
   },
 ];
