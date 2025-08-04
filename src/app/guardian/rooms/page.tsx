@@ -2,13 +2,13 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
 import type { Chat, Message, User } from '@/lib/data';
-import { MessageSquarePlus, PanelLeft } from 'lucide-react';
+import { MessageSquarePlus, PanelLeft, Loader } from 'lucide-react';
 import { Header } from '@/components/guardian/header';
 import { SOSButton } from '@/components/guardian/sos-button';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,7 @@ const NoChatSelected = () => (
   </div>
 );
 
-export default function RoomsPage() {
+function RoomsPageContent() {
   const searchParams = useSearchParams();
   const requestedChatId = searchParams.get('chatId');
 
@@ -208,4 +208,20 @@ export default function RoomsPage() {
       <SOSButton />
     </div>
   );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center h-screen w-screen bg-background">
+      <Loader className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  )
+}
+
+export default function RoomsPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <RoomsPageContent />
+    </Suspense>
+  )
 }
