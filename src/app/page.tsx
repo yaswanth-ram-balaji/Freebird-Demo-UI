@@ -174,11 +174,11 @@ export default function FreeBirdPage() {
                 title="Rooms"
                 description="Create or join private group chats"
               />
-              <FeatureCard
+               <FeatureCard
                 href="/guardian/group-rooms"
                 icon={Video}
-                title="Join Meeting"
-                description="Enter a room code for a video call"
+                title="Join Room"
+                description="Enter a room code to join a chat"
               />
           </div>
         </div>

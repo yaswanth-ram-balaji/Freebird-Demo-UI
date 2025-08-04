@@ -102,9 +102,17 @@ export default function GroupRoomsPage() {
         toast({ title: 'Please enter a room code', variant: 'destructive'});
         return;
     }
-    router.push(`/guardian/meeting/${joinRoomCode}`);
-    setJoinRoomCode('');
-    setIsJoinDialogOpen(false);
+    // In a real app, you'd find the room with this code.
+    // For this demo, we'll just find the first available group chat to join.
+    const roomToJoin = groupChats.find(chat => chat.code?.toUpperCase() === joinRoomCode.toUpperCase());
+
+    if (roomToJoin) {
+        router.push(`/guardian/rooms?chatId=${roomToJoin.id}`);
+        setJoinRoomCode('');
+        setIsJoinDialogOpen(false);
+    } else {
+        toast({ title: 'Room not found', description: 'No room exists with that code.', variant: 'destructive' });
+    }
   }
   
   const handleDeleteRoom = (roomId: string, roomName?: string) => {
@@ -112,7 +120,6 @@ export default function GroupRoomsPage() {
     toast({
         title: 'Room Deleted',
         description: `The room "${roomName}" has been successfully deleted.`,
-        variant: 'destructive',
     })
   }
 
@@ -175,7 +182,7 @@ export default function GroupRoomsPage() {
                      <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="code" className="text-right">Code</Label>
-                            <Input id="code" value={joinRoomCode} onChange={(e) => setJoinRoomCode(e.target.value)} className="col-span-3" placeholder="e.g. NPHL5U" />
+                            <Input id="code" value={joinRoomCode} onChange={(e) => setJoinRoomCode(e.target.value.toUpperCase())} className="col-span-3" placeholder="e.g. NPHL5U" />
                         </div>
                     </div>
                     <DialogFooter>
@@ -209,11 +216,11 @@ export default function GroupRoomsPage() {
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button
-                                variant="destructive"
+                                variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="h-10 w-10 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                             >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-5 w-5" />
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
@@ -226,7 +233,9 @@ export default function GroupRoomsPage() {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDeleteRoom(chat.id, chat.name)}>
+                                <AlertDialogAction
+                                    variant="destructive"
+                                    onClick={() => handleDeleteRoom(chat.id, chat.name)}>
                                     Delete
                                 </AlertDialogAction>
                             </AlertDialogFooter>
