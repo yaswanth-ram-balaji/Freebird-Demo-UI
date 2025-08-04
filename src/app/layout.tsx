@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/context/theme-provider';
+import { AnonymityProvider } from '@/context/anonymity-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600'] });
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-headline', weight: ['700'] });
@@ -31,8 +32,10 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
           >
-          {children}
-          <Toaster />
+          <AnonymityProvider>
+            {children}
+            <Toaster />
+          </AnonymityProvider>
         </ThemeProvider>
       </body>
     </html>

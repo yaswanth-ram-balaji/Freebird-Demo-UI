@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { SparklesText } from '@/components/ui/sparkles-text';
 import { SOSButton } from '@/components/guardian/sos-button';
+import { useAnonymity } from '@/context/anonymity-provider';
 
 const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
     const [animationStep, setAnimationStep] = useState(0);
@@ -102,7 +103,7 @@ const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href
 
 
 export default function FreeBirdPage() {
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const { isAnonymous, setIsAnonymous } = useAnonymity();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

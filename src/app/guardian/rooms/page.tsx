@@ -16,7 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useIsMobile } from '@/hooks/use-mobile';
-
+import { useAnonymity } from '@/context/anonymity-provider';
 
 const NoChatSelected = () => (
   <div className="flex flex-col items-center justify-center h-full text-center bg-gray-100 dark:bg-gray-900/50 p-4">
@@ -32,7 +32,11 @@ export default function RoomsPage() {
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isAnonymous, setIsAnonymous } = useAnonymity();
 
+  useEffect(() => {
+    setCurrentUser(prevUser => ({ ...prevUser, anonymous: isAnonymous }));
+  }, [isAnonymous]);
 
   useEffect(() => {
     if (!isMobile) {
@@ -79,7 +83,7 @@ export default function RoomsPage() {
   }
   
   const handleToggleAnonymous = () => {
-    setCurrentUser(prevUser => ({...prevUser, anonymous: !prevUser.anonymous}));
+    setIsAnonymous(!isAnonymous);
   }
 
   const selectedChat = chats.find(c => c.id === selectedChatId);

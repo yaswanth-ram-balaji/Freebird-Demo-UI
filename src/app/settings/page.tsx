@@ -2,7 +2,6 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, User, Bell, Shield, Moon, Sun, Palette, QrCode, LogOut, Ghost, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useTheme } from '@/context/theme-provider';
+import { useAnonymity } from '@/context/anonymity-provider';
 
 const SettingsItem = ({ icon: Icon, title, description, action }: { icon: React.ElementType, title: string, description?: string, action: React.ReactNode }) => (
   <div className="flex items-center py-4">
@@ -27,7 +27,7 @@ const SettingsItem = ({ icon: Icon, title, description, action }: { icon: React.
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
-  const [isAnonymous, setIsAnonymous] = useState(true);
+  const { isAnonymous, setIsAnonymous } = useAnonymity();
 
   const isDarkMode = theme === 'dark';
 
@@ -54,11 +54,11 @@ export default function SettingsPage() {
           <Card>
             <CardHeader className="flex flex-row items-center gap-4">
               <Avatar className="h-16 w-16">
-                <AvatarImage src="https://i.pravatar.cc/150?u=user1" alt="Demo User" />
-                <AvatarFallback>DU</AvatarFallback>
+                <AvatarImage src={isAnonymous ? 'https://i.pravatar.cc/150?u=anonymous' : "https://i.pravatar.cc/150?u=user1"} alt="Demo User" />
+                <AvatarFallback>{isAnonymous ? 'A' : 'DU'}</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle>Demo User</CardTitle>
+                <CardTitle>{isAnonymous ? 'Anonymous' : 'Demo User'}</CardTitle>
                 <p className="text-muted-foreground">Status: Safe and sound</p>
               </div>
               <Button variant="outline" size="sm" className="ml-auto">Edit Profile</Button>
