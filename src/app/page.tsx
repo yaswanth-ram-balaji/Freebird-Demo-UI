@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Settings, MessageSquare, Lock, PlusSquare, WifiOff } from 'lucide-react';
+import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -20,7 +20,6 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
             setTimeout(() => setAnimationStep(3), 5000), // Bird flies out
             setTimeout(() => setAnimationStep(4), 7000), // Logo reveal
             setTimeout(() => setAnimationStep(5), 8000), // Typing animation start
-            setTimeout(() => setAnimationStep(6), 12000), // Subtitle reveal
             setTimeout(onFinished, 14000), // Total duration + pause
         ];
         return () => timers.forEach(clearTimeout);
@@ -58,7 +57,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                      </div>
                  </div>
 
-                {/* Step 4, 5 & 6: Final Logo and Text */}
+                {/* Step 4 & 5: Final Logo and Text */}
                  <div className={cn("flex flex-col items-center justify-center text-center transition-opacity duration-1000", animationStep >= 4 ? 'opacity-100' : 'opacity-0')}>
                     <div className="flex flex-col items-center animate-pop-in">
                         <span className="text-7xl">🕊️</span>
@@ -72,14 +71,11 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                         {animationStep >= 5 && (
                           <div className="animate-typing inline-block whitespace-nowrap overflow-hidden font-serif">
-                            <span>when internet </span>
-                            <span className="text-red-400">dies </span>
-                            <span className="text-green-400">freebird flies</span>
+                            <span>When the internet </span>
+                            <span className="text-red-400">dies, </span>
+                            <span className="text-green-400">FreeBird flies.</span>
                           </div>
                         )}
-                    </div>
-                     <div className={cn("mt-4 text-sm text-primary-foreground/60 transition-opacity duration-1000", animationStep >= 6 ? 'opacity-100' : 'opacity-0')}>
-                        (Offline features are currently in simulation)
                     </div>
                 </div>
             </div>
@@ -167,7 +163,7 @@ export default function FreeBirdPage() {
               />
               <FeatureCard
                 href="/guardian/private"
-                icon={Lock}
+                icon={PlusSquare}
                 title="Private Chat"
                 description="Request-based direct messaging"
               />
