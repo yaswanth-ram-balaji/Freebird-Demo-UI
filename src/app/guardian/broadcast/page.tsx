@@ -2,6 +2,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -11,6 +12,9 @@ import { SOSButton } from '@/components/guardian/sos-button';
 import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 
 export default function BroadcastPage() {
   const router = useRouter();
@@ -28,11 +32,16 @@ export default function BroadcastPage() {
   }, [isAnonymous]);
   
   if (!publicChat) {
-    // Handle case where no public chat is found
-     useEffect(() => {
-      router.push('/');
-    }, [router]);
-    return null;
+    // This case should not happen in the prototype, but it's good practice.
+    // In a real app, you might create a public chat if one doesn't exist.
+    return (
+      <div className="flex flex-col h-screen bg-background items-center justify-center">
+         <p>No public broadcast channel found.</p>
+         <Link href="/" passHref>
+          <Button variant="link">Return to Home</Button>
+        </Link>
+      </div>
+    )
   }
 
 
@@ -127,6 +136,8 @@ export default function BroadcastPage() {
       <Header 
         currentUser={currentUser} 
         onStatusChange={handleStatusChange}
+        title="Public Broadcast"
+        showBackButton
       />
       <main className="flex-1 flex flex-col">
           <ChatView

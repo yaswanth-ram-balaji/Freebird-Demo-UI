@@ -34,14 +34,20 @@ export default function RoomsPage() {
   const requestedChatId = searchParams.get('chatId');
 
   const [chats, setChats] = useState<Chat[]>(initialChats);
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(requestedChatId);
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAnonymous } = useAnonymity();
   const [isAiReplying, setIsAiReplying] = useState(false);
   
-  const activeChats = chats.filter(c => c.participants.includes(currentUser.id));
+  const activeChats = chats.filter(c => c.type !== 'public' && c.participants.includes(currentUser.id));
+  
+  useEffect(() => {
+    if (requestedChatId) {
+      setSelectedChatId(requestedChatId);
+    }
+  }, [requestedChatId]);
 
   useEffect(() => {
     setCurrentUser(prevUser => ({ ...prevUser, anonymous: isAnonymous }));
@@ -49,11 +55,11 @@ export default function RoomsPage() {
 
   useEffect(() => {
     if (!isMobile) {
-      if (!selectedChatId && activeChats.length > 0) {
+      if (!selectedChatId && activeChats.length > 0 && !requestedChatId) {
         setSelectedChatId(activeChats[0].id);
       }
     }
-  }, [isMobile, selectedChatId, activeChats]);
+  }, [isMobile, selectedChatId, activeChats, requestedChatId]);
 
   const handleSelectChat = (chatId: string) => {
     setSelectedChatId(chatId);
@@ -165,12 +171,14 @@ export default function RoomsPage() {
       <Header 
         currentUser={currentUser} 
         onStatusChange={handleStatusChange}
+        showBackButton
+        title="My Chats"
       />
       <div className="flex flex-1 overflow-hidden">
         {isMobile ? (
              <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="absolute top-16 left-2 z-10">
+                    <Button variant="ghost" size="icon" className="absolute top-16 left-2 z-10 md:hidden">
                         <PanelLeft />
                     </Button>
                 </SheetTrigger>
@@ -193,7 +201,7 @@ export default function RoomsPage() {
               isAiReplying={isAiReplying}
             />
           ) : (
-            <NoChatSelected />
+             isMobile ? null : <NoChatSelected />
           )}
         </main>
       </div>

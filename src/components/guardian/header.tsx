@@ -1,8 +1,11 @@
+
 'use client';
 
 import type { User } from '@/lib/data';
+import Link from 'next/link';
 import {
   AlertTriangle,
+  ArrowLeft,
   CheckCircle,
   Ghost,
   HelpCircle,
@@ -39,11 +42,15 @@ import { useAnonymity } from '@/context/anonymity-provider';
 type HeaderProps = {
   currentUser: User;
   onStatusChange: (status: 'safe' | 'help' | 'danger') => void;
+  title?: string;
+  showBackButton?: boolean;
 };
 
 export function Header({
   currentUser,
   onStatusChange,
+  title,
+  showBackButton = false,
 }: HeaderProps) {
 
   const { theme, setTheme } = useTheme();
@@ -70,8 +77,16 @@ export function Header({
   return (
     <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-card border-b">
       <div className="flex items-center gap-3">
-        <Shield className="h-8 w-8 text-primary" />
-        <h1 className="text-xl font-headline font-bold text-foreground">GuardianLink</h1>
+        {showBackButton ? (
+          <Link href="/" passHref>
+            <Button variant="ghost" size="icon">
+              <ArrowLeft />
+            </Button>
+          </Link>
+        ) : (
+          <Shield className="h-8 w-8 text-primary" />
+        )}
+        <h1 className="text-xl font-headline font-bold text-foreground">{title || 'GuardianLink'}</h1>
       </div>
 
       <DropdownMenu>

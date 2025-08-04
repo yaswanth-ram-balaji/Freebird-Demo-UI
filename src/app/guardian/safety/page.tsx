@@ -12,7 +12,7 @@ export default function SafetyPage() {
     <div className="flex flex-col h-screen bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex items-center h-16 px-4 mx-auto md:px-6">
-          <Link href="/">
+          <Link href="/" passHref>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-5 w-5" />
             </Button>

@@ -39,7 +39,7 @@ export default function SettingsPage() {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <div className="container flex items-center justify-between h-16 px-4 mx-auto md:px-6">
-          <Link href="/">
+          <Link href="/" passHref>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -86,7 +86,7 @@ export default function SettingsPage() {
                   title="Sync Contacts"
                   description="Add contacts via QR code"
                    action={
-                     <Link href="/settings/sync">
+                     <Link href="/settings/sync" passHref>
                        <Button variant="ghost" size="icon"><ChevronRight/></Button>
                      </Link>
                    }

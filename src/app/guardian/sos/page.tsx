@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -31,7 +32,7 @@ export default function SOSPage() {
   return (
     <div className="flex flex-col h-screen bg-gray-900 text-white">
       <header className="absolute top-0 left-0 w-full p-4">
-        <Link href="/">
+        <Link href="/" passHref>
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-6 w-6" />
           </Button>
