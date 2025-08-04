@@ -1,4 +1,3 @@
-
 'use client';
 
 import type { User } from '@/lib/data';
@@ -35,25 +34,29 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useTheme } from '@/context/theme-provider';
+import { useAnonymity } from '@/context/anonymity-provider';
 
 type HeaderProps = {
   currentUser: User;
   onStatusChange: (status: 'safe' | 'help' | 'danger') => void;
-  onToggleAnonymous: () => void;
 };
 
 export function Header({
   currentUser,
   onStatusChange,
-  onToggleAnonymous,
 }: HeaderProps) {
 
   const { theme, setTheme } = useTheme();
+  const { isAnonymous, setIsAnonymous } = useAnonymity();
   const isDarkMode = theme === 'dark';
 
   const toggleDarkMode = () => {
     setTheme(isDarkMode ? 'light' : 'dark');
   };
+  
+  const handleToggleAnonymous = () => {
+    setIsAnonymous(!isAnonymous);
+  }
 
   const StatusIcon = ({ status }: { status: User['status'] }) => {
     switch (status) {
@@ -123,8 +126,8 @@ export function Header({
                 </Label>
                 <Switch
                   id="anonymous-mode"
-                  checked={currentUser.anonymous}
-                  onCheckedChange={onToggleAnonymous}
+                  checked={isAnonymous}
+                  onCheckedChange={handleToggleAnonymous}
                 />
               </div>
             </DropdownMenuItem>

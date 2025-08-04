@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Paperclip, Send, Smile, Copy } from 'lucide-react';
+import { Paperclip, Send, Smile, Copy, Bot } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -23,9 +23,10 @@ type ChatViewProps = {
   users: User[];
   currentUser: User;
   onSendMessage: (text: string) => void;
+  isAiReplying?: boolean;
 };
 
-export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewProps) {
+export function ChatView({ chat, users, currentUser, onSendMessage, isAiReplying = false }: ChatViewProps) {
   const [message, setMessage] = React.useState('');
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -37,7 +38,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
             viewport.scrollTop = viewport.scrollHeight;
         }
     }
-  }, [chat.messages]);
+  }, [chat.messages, isAiReplying]);
 
   const getSender = (senderId: string): User => {
     const user = users.find(u => u.id === senderId);
@@ -172,6 +173,21 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
               </div>
             );
           })}
+          {isAiReplying && (
+            <div className="flex items-end gap-3 animate-in fade-in-50 duration-500 justify-start">
+              <Avatar className="h-8 w-8">
+                  <AvatarImage src={users.find(u => u.id === 'user2')?.avatar} />
+                  <AvatarFallback><Bot /></AvatarFallback>
+              </Avatar>
+               <div className="max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl relative group bg-card text-card-foreground rounded-bl-none border">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+              </div>
+            </div>
+          )}
         </div>
       </ScrollArea>
 
@@ -184,8 +200,9 @@ export function ChatView({ chat, users, currentUser, onSendMessage }: ChatViewPr
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
             autoComplete="off"
+            disabled={isAiReplying}
           />
-          <Button type="submit" size="icon">
+          <Button type="submit" size="icon" disabled={isAiReplying}>
             <Send className="h-5 w-5" />
           </Button>
         </form>

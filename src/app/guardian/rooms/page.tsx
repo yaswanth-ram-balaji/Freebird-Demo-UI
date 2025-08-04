@@ -32,7 +32,8 @@ export default function RoomsPage() {
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isAnonymous, setIsAnonymous } = useAnonymity();
+  const { isAnonymous } = useAnonymity();
+  const [isAiReplying, setIsAiReplying] = useState(false);
 
   useEffect(() => {
     setCurrentUser(prevUser => ({ ...prevUser, anonymous: isAnonymous }));
@@ -82,10 +83,6 @@ export default function RoomsPage() {
     // Here you would also update the user's status on the backend
   }
   
-  const handleToggleAnonymous = () => {
-    setIsAnonymous(!isAnonymous);
-  }
-
   const selectedChat = chats.find(c => c.id === selectedChatId);
 
   const sidebarContent = (
@@ -103,7 +100,6 @@ export default function RoomsPage() {
       <Header 
         currentUser={currentUser} 
         onStatusChange={handleStatusChange}
-        onToggleAnonymous={handleToggleAnonymous}
       />
       <div className="flex flex-1 overflow-hidden">
         {isMobile ? (
@@ -128,6 +124,7 @@ export default function RoomsPage() {
               users={users}
               currentUser={currentUser}
               onSendMessage={handleSendMessage}
+              isAiReplying={isAiReplying}
             />
           ) : (
             <NoChatSelected />
