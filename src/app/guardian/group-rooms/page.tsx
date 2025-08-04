@@ -4,7 +4,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Plus, Hash } from 'lucide-react';
+import { ArrowLeft, Plus, Hash, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -19,6 +19,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -72,6 +83,15 @@ export default function GroupRoomsPage() {
      toast({ title: `Joined room!`, description: `You have successfully joined the room with code ${joinRoomCode}.` });
      setJoinRoomCode('');
      setIsJoinDialogOpen(false);
+  }
+  
+  const handleDeleteRoom = (roomId: string, roomName?: string) => {
+    setGroupChats(prev => prev.filter(chat => chat.id !== roomId));
+    toast({
+        title: 'Room Deleted',
+        description: `The room "${roomName}" has been successfully deleted.`,
+        variant: 'destructive',
+    })
   }
 
   return (
@@ -147,22 +167,49 @@ export default function GroupRoomsPage() {
       <main className="flex-1 overflow-y-auto p-4 md:p-8">
         <div className="container mx-auto space-y-4">
             {groupChats.map(chat => (
-                <Link href={`/guardian/rooms?chatId=${chat.id}`} key={chat.id}>
-                    <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
-                        <CardContent className="flex items-center justify-between p-4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-semibold">{chat.name}</p>
-                                <p className="text-sm text-muted-foreground">{chat.participants.length} participants</p>
-                            </div>
-                            <div className="flex flex-col items-end">
-                                <Badge variant="outline">{chat.code}</Badge>
-                                <p className="text-xs text-muted-foreground mt-2">
-                                    Created {chat.createdAt ? new Date(chat.createdAt).toLocaleDateString() : 'recently'}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
+                <div key={chat.id} className="group relative">
+                    <Link href={`/guardian/rooms?chatId=${chat.id}`} >
+                        <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
+                            <CardContent className="flex items-center justify-between p-4">
+                                <div className="flex flex-col">
+                                    <p className="text-lg font-semibold">{chat.name}</p>
+                                    <p className="text-sm text-muted-foreground">{chat.participants.length} participants</p>
+                                </div>
+                                <div className="flex flex-col items-end">
+                                    <Badge variant="outline">{chat.code}</Badge>
+                                    <p className="text-xs text-muted-foreground mt-2">
+                                        Created {chat.createdAt ? new Date(chat.createdAt).toLocaleDateString() : 'recently'}
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button 
+                                variant="destructive" 
+                                size="icon" 
+                                className="absolute top-1/2 -translate-y-1/2 right-4 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the room
+                                    <span className="font-bold"> {chat.name}</span> and remove all associated messages.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDeleteRoom(chat.id, chat.name)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
             ))}
             {groupChats.length === 0 && (
                 <div className="text-center py-16 text-muted-foreground">
