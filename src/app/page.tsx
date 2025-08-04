@@ -140,11 +140,6 @@ export default function FreeBirdPage() {
                 <Settings className="w-6 h-6" />
               </Button>
             </Link>
-             <Link href="/guardian/rooms">
-              <Button variant="ghost" size="icon">
-                <Users className="w-6 h-6" />
-              </Button>
-            </Link>
           </div>
         </div>
       </header>
@@ -187,16 +182,6 @@ export default function FreeBirdPage() {
         </div>
       </main>
       
-      <div className="fixed bottom-6 right-6 flex flex-col items-center gap-4 z-50">
-        <Button 
-          variant="outline"
-          size="icon"
-          className="w-14 h-14 rounded-full bg-background border-2 shadow-lg"
-          onClick={() => setIsAnonymous(!isAnonymous)}
-        >
-          <Ghost className={cn("h-7 w-7 transition-colors", isAnonymous ? 'text-primary' : 'text-muted-foreground')} />
-        </Button>
-      </div>
     </div>
   );
 }
