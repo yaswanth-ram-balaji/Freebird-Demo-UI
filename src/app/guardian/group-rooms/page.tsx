@@ -70,7 +70,6 @@ export default function GroupRoomsPage() {
     toast({ title: `Room "${newRoomName}" created!`, description: `Share the code ${newRoom.code} to invite others.` });
     setNewRoomName('');
     setIsCreateDialogOpen(false);
-    router.push(`/guardian/rooms?chatId=${newRoom.id}`);
   };
 
   const handleJoinRoom = () => {
