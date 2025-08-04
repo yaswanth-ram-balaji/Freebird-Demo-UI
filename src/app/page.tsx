@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff, Users } from 'lucide-react';
+import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff, Users, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -30,7 +30,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0, 1 & 2: Network Symbol */}
                 <div className={cn("absolute transition-opacity duration-500", (animationStep >= 2 && animationStep < 3) ? 'opacity-100' : (animationStep >=3 ? 'opacity-0' : 'opacity-100'))}>
-                     {animationStep < 1 && <WifiOff className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
+                     {animationStep < 1 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
                      {animationStep >= 1 && <WifiOff className="w-24 h-24 text-red-400" />}
                 </div>
 
@@ -62,7 +62,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <div className="flex flex-col items-center animate-pop-in">
                         <span className="text-7xl">🕊️</span>
                         <SparklesText
-                          text="GuardianLink"
+                          text="FreeBird"
                           className="text-7xl font-bold tracking-tight font-headline"
                           colors={{ first: '#FFFFFF', second: '#87CEEB' }}
                           sparklesCount={20}
@@ -126,7 +126,7 @@ export default function FreeBirdPage() {
           <div className="flex items-center gap-3">
             <span className="text-3xl">🕊️</span>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight font-headline">GuardianLink</h1>
+              <h1 className="text-2xl font-bold tracking-tight font-headline">FreeBird</h1>
               <p className="text-xs text-primary-foreground/80">Stay Connected, Stay Safe</p>
             </div>
           </div>
