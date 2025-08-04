@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff, Users, Wifi } from 'lucide-react';
+import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff, Users, Wifi, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -173,6 +173,12 @@ export default function FreeBirdPage() {
                 icon={PlusSquare}
                 title="Rooms"
                 description="Create or join private group chats"
+              />
+              <FeatureCard
+                href="/guardian/group-rooms"
+                icon={Video}
+                title="Join Meeting"
+                description="Enter a room code for a video call"
               />
           </div>
         </div>

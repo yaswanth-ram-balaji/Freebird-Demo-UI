@@ -102,11 +102,9 @@ export default function GroupRoomsPage() {
         toast({ title: 'Please enter a room code', variant: 'destructive'});
         return;
     }
-    // In a real app, you'd validate the code against a backend.
-    // For this prototype, we'll just show a success message.
-     toast({ title: `Joined room!`, description: `You have successfully joined the room with code ${joinRoomCode}.` });
-     setJoinRoomCode('');
-     setIsJoinDialogOpen(false);
+    router.push(`/guardian/meeting/${joinRoomCode}`);
+    setJoinRoomCode('');
+    setIsJoinDialogOpen(false);
   }
   
   const handleDeleteRoom = (roomId: string, roomName?: string) => {
