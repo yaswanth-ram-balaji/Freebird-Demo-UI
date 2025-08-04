@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff } from 'lucide-react';
+import { Shield, AlertTriangle, Settings, MessageSquare, PlusSquare, WifiOff, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -62,7 +62,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <div className="flex flex-col items-center animate-pop-in">
                         <span className="text-7xl">🕊️</span>
                         <SparklesText
-                          text="FreeBird"
+                          text="GuardianLink"
                           className="text-7xl font-bold tracking-tight font-headline"
                           colors={{ first: '#FFFFFF', second: '#87CEEB' }}
                           sparklesCount={20}
@@ -73,7 +73,8 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                           <div className="animate-typing inline-block whitespace-nowrap overflow-hidden font-serif">
                             <span>When the internet </span>
                             <span className="text-red-400">dies, </span>
-                            <span className="text-green-400">FreeBird flies.</span>
+                            <span>FreeBird </span>
+                            <span className="text-green-400">flies.</span>
                           </div>
                         )}
                     </div>
@@ -125,7 +126,7 @@ export default function FreeBirdPage() {
           <div className="flex items-center gap-3">
             <span className="text-3xl">🕊️</span>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight font-headline">FreeBird</h1>
+              <h1 className="text-2xl font-bold tracking-tight font-headline">GuardianLink</h1>
               <p className="text-xs text-primary-foreground/80">Stay Connected, Stay Safe</p>
             </div>
           </div>
@@ -163,7 +164,7 @@ export default function FreeBirdPage() {
               />
               <FeatureCard
                 href="/guardian/private"
-                icon={PlusSquare}
+                icon={Users}
                 title="Private Chat"
                 description="Request-based direct messaging"
               />
