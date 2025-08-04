@@ -35,6 +35,7 @@ type ChatViewProps = {
   onSendMessage: (text: string) => void;
   onReactToMessage: (messageId: string, emoji: string) => void;
   isAiReplying?: boolean;
+  onLeaveRoom: (chatId: string, chatName?: string) => void;
 };
 
 const ReactionPicker = ({ onSelect }: { onSelect: (emoji: string) => void }) => (
@@ -83,7 +84,7 @@ const sampleFiles = [
     { name: 'Course_Syllabus.pdf', type: 'pdf', size: '450 KB' },
 ];
 
-export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMessage, isAiReplying = false }: ChatViewProps) {
+export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMessage, isAiReplying = false, onLeaveRoom }: ChatViewProps) {
   const [message, setMessage] = React.useState('');
   const [showPinned, setShowPinned] = React.useState(true);
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
@@ -135,15 +136,6 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
     }
   }
   
-  const handleLeaveRoom = () => {
-      toast({
-          title: 'Left Room',
-          description: `You have left "${chat.name}".`,
-          variant: 'destructive'
-      });
-      // Here you would add logic to navigate the user away or update the UI
-  }
-  
   const handleQuickMessageSelect = (msg: string) => {
       onSendMessage(msg);
   }
@@ -185,7 +177,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleLeaveRoom} className="text-destructive focus:text-destructive">
+                <DropdownMenuItem onClick={() => onLeaveRoom(chat.id, chat.name)} className="text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Leave Room</span>
                 </DropdownMenuItem>

@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -19,6 +19,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
+import { useToast } from '@/hooks/use-toast';
 
 const STORAGE_KEY = 'guardianlink-group-chats';
 const ALL_CHATS_STORAGE_KEY = 'guardianlink-all-chats';
@@ -33,8 +34,10 @@ const NoChatSelected = () => (
 );
 
 function RoomsPageContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedChatId = searchParams.get('chatId');
+  const { toast } = useToast();
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -192,6 +195,16 @@ function RoomsPageContent() {
     setCurrentUser(prevUser => ({...prevUser, status}));
     // Here you would also update the user's status on the backend
   }
+
+  const handleLeaveRoom = (chatId: string, chatName?: string) => {
+    setChats(prev => prev.filter(chat => chat.id !== chatId));
+    toast({
+        title: 'Left Room',
+        description: `You have left "${chatName}".`,
+        variant: 'destructive',
+    });
+    router.push('/guardian/group-rooms');
+  }
   
   const selectedChat = chats.find(c => c.id === selectedChatId);
 
@@ -207,6 +220,7 @@ function RoomsPageContent() {
                 onSendMessage={handleSendMessage}
                 onReactToMessage={handleReactToMessage}
                 isAiReplying={isAiReplying}
+                onLeaveRoom={handleLeaveRoom}
               />
           </main>
        </div>
