@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AlertTriangle, ArrowLeft, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -18,33 +18,47 @@ export default function SOSPage() {
   const [sendLocation, setSendLocation] = useState(true);
   const [message, setMessage] = useState('');
   const { toast } = useToast();
+  const alertCount = useRef(0);
+  const MAX_ALERTS_TO_SHOW = 3;
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
 
     if (isSosActive) {
-      // Send initial alert immediately
-       toast({
-          title: 'SOS Activated',
-          description: `Continuous alerts are being sent.`,
-          variant: 'destructive',
-       });
+      alertCount.current = 0; // Reset counter on activation
       
+      // Function to send a single alert toast
+      const sendAlertToast = () => {
+        if (alertCount.current < MAX_ALERTS_TO_SHOW) {
+          let title = alertCount.current === 0 ? 'SOS Activated' : 'SOS Alert Sent (Continuous)';
+          let description = alertCount.current === 0 
+            ? `Continuous alerts are being sent.`
+            : `Emergency alert broadcasted ${isSilent ? 'silently' : 'loudly'}.`;
+
+          if (alertCount.current > 0 && sendLocation) {
+            description += ' Location is being shared.';
+          }
+          if (alertCount.current > 0 && message) {
+            description += ` Message: "${message}"`;
+          }
+
+          toast({
+            title: title,
+            description: description,
+            variant: 'destructive',
+            duration: 4000, 
+          });
+          alertCount.current++;
+        }
+      };
+      
+      sendAlertToast(); // Send initial alert immediately
+
       // Start sending alerts periodically
       intervalId = setInterval(() => {
-        let description = `Emergency alert broadcasted ${isSilent ? 'silently' : 'loudly'}.`;
-         if (sendLocation) {
-          description += ' Location is being shared.';
-        }
-         if (message) {
-          description += ` Message: "${message}"`;
-        }
-        toast({
-          title: 'SOS Alert Sent (Continuous)',
-          description: description,
-          variant: 'destructive',
-          duration: 4000, // Make toast visible for a shorter time
-        });
+         // This simulates the continuous background alert.
+         // We only show a toast for the first few.
+         sendAlertToast();
       }, 5000); // Send an alert every 5 seconds
     } else {
        if (intervalId) {
