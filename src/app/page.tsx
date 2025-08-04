@@ -129,7 +129,10 @@ export default function FreeBirdPage() {
         <div className="container flex items-center justify-between h-20 px-4 mx-auto md:px-6">
           <div className="flex items-center gap-3">
             <span className="text-3xl">🕊️</span>
-            <h1 className="text-3xl font-bold tracking-tight font-headline">FreeBird</h1>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight font-headline">FreeBird</h1>
+              <p className="text-xs text-primary-foreground/80">Stay Connected, Stay Safe</p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/settings">
@@ -147,11 +150,7 @@ export default function FreeBirdPage() {
       </header>
 
       <main className="flex-1 p-4 md:p-8">
-        <div className="container px-4 mx-auto md:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">Stay Connected, Stay Safe</h2>
-            <p className="mt-2 text-lg text-muted-foreground">Your reliable off-grid communication tool.</p>
-          </div>
+        <div className="container px-4 mx-auto md:px-6 mt-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
              <FeatureCard
                 href="/guardian/sos"
