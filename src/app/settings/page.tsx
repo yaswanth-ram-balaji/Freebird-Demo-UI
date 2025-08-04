@@ -85,7 +85,11 @@ export default function SettingsPage() {
                   icon={QrCode}
                   title="Sync Contacts"
                   description="Add contacts via QR code"
-                   action={<Button variant="ghost" size="icon"><ChevronRight/></Button>}
+                   action={
+                     <Link href="/settings/sync">
+                       <Button variant="ghost" size="icon"><ChevronRight/></Button>
+                     </Link>
+                   }
                 />
               </CardContent>
             </Card>
