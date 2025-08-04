@@ -197,11 +197,9 @@ function RoomsPageContent() {
   }
 
   const handleLeaveRoom = (chatId: string, chatName?: string) => {
-    setChats(prev => prev.filter(chat => chat.id !== chatId));
     toast({
         title: 'Left Room',
         description: `You have left "${chatName}".`,
-        variant: 'destructive',
     });
     router.push('/guardian/group-rooms');
   }
