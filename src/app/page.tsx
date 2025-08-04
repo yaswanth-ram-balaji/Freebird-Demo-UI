@@ -4,12 +4,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Shield, AlertTriangle, Users, Settings, Ghost, Wifi, WifiOff, MessageSquare, Lock, PlusSquare } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Settings, Ghost, MessageSquare, Lock, PlusSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { SparklesText } from '@/components/ui/sparkles-text';
-import { SOSButton } from '@/components/guardian/sos-button';
 import { useAnonymity } from '@/context/anonymity-provider';
 
 const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
@@ -33,8 +32,8 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                 {/* Step 0, 1 & 2: Network Symbol */}
                 <div className={cn("absolute transition-opacity duration-500", (animationStep >= 2 && animationStep < 3) ? 'opacity-100' : (animationStep >=3 ? 'opacity-0' : 'opacity-100'))}>
-                     {animationStep < 1 && <Wifi className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
-                     {animationStep >= 1 && <WifiOff className="w-24 h-24 text-red-400" />}
+                     {animationStep < 1 && <Users className="w-24 h-24 text-primary-foreground/80 animate-pulse" />}
+                     {animationStep >= 1 && <Users className="w-24 h-24 text-red-400" />}
                 </div>
 
                 {/* Step 2: Bird flies in */}
@@ -56,7 +55,7 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                  >
                      <div className="flex items-center text-4xl">
                          <span>🕊️</span>
-                         <WifiOff className="w-8 h-8 text-red-400 ml-[-10px] mt-2" />
+                         <Users className="w-8 h-8 text-red-400 ml-[-10px] mt-2" />
                      </div>
                  </div>
 
@@ -74,10 +73,8 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <div className="mt-4 text-2xl text-primary-foreground/80 font-tagline">
                         {animationStep >= 5 && (
                           <div className="animate-typing inline-block whitespace-nowrap overflow-hidden font-serif">
-                            <span className="text-white">When the internet </span>
-                            <span className="text-red-400">dies, </span>
-                            <span className="text-white">FreeBird </span>
-                            <span className="text-green-400">connects.</span>
+                            <span className="text-white">When you feel unsafe, </span>
+                            <span className="text-green-400">FreeBird connects.</span>
                           </div>
                         )}
                     </div>
@@ -106,7 +103,7 @@ const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href
 );
 
 
-export default function GuardianLinkPage() {
+export default function FreeBirdPage() {
   const { isAnonymous, setIsAnonymous } = useAnonymity();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -200,8 +197,6 @@ export default function GuardianLinkPage() {
         >
           <Ghost className={cn("h-7 w-7 transition-colors", isAnonymous ? 'text-primary' : 'text-muted-foreground')} />
         </Button>
-        
-        <SOSButton />
       </div>
     </div>
   );
