@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Hash, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { currentUser, users, chats as initialChats, Chat } from '@/lib/data';
+import { currentUser, users, type Chat } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -37,15 +37,40 @@ function generateRoomCode() {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
+const STORAGE_KEY = 'guardianlink-group-chats';
+
 export default function GroupRoomsPage() {
   const { toast } = useToast();
   const router = useRouter();
   
-  const [groupChats, setGroupChats] = React.useState<Chat[]>(initialChats.filter(c => c.type === 'group'));
+  const [groupChats, setGroupChats] = React.useState<Chat[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
   const [isJoinDialogOpen, setIsJoinDialogOpen] = React.useState(false);
   const [newRoomName, setNewRoomName] = React.useState('');
   const [joinRoomCode, setJoinRoomCode] = React.useState('');
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+    try {
+        const storedChats = localStorage.getItem(STORAGE_KEY);
+        if (storedChats) {
+            setGroupChats(JSON.parse(storedChats));
+        }
+    } catch (error) {
+        console.error("Failed to load chats from localStorage", error);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (isMounted) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(groupChats));
+        } catch (error) {
+            console.error("Failed to save chats to localStorage", error);
+        }
+    }
+  }, [groupChats, isMounted]);
 
 
   const handleCreateRoom = () => {
@@ -165,7 +190,7 @@ export default function GroupRoomsPage() {
 
       <main className="flex-1 overflow-y-auto p-4 md:p-8">
         <div className="container mx-auto space-y-4">
-            {groupChats.map(chat => (
+            {isMounted && groupChats.map(chat => (
                 <div key={chat.id} className="group relative">
                     <Link href={`/guardian/rooms?chatId=${chat.id}`} >
                         <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
@@ -189,7 +214,10 @@ export default function GroupRoomsPage() {
                                 variant="destructive" 
                                 size="icon" 
                                 className="absolute top-1/2 -translate-y-1/2 right-4 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }}
                             >
                                 <Trash2 className="h-4 w-4" />
                             </Button>
@@ -204,16 +232,20 @@ export default function GroupRoomsPage() {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDeleteRoom(chat.id, chat.name)}>Delete</AlertDialogAction>
+                                <AlertDialogAction onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleDeleteRoom(chat.id, chat.name);
+                                }}>Delete</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>
             ))}
-            {groupChats.length === 0 && (
-                <div className="text-center py-16 text-muted-foreground">
-                    <p>No rooms yet.</p>
-                    <p>Create a room to start collaborating.</p>
+            {isMounted && groupChats.length === 0 && (
+                <div className="text-center py-16 text-muted-foreground border-2 border-dashed rounded-lg">
+                    <h3 className="text-xl font-semibold mb-2">No Rooms Yet</h3>
+                    <p>Get started by creating a new room or joining an existing one.</p>
                 </div>
             )}
         </div>
