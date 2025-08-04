@@ -61,15 +61,14 @@ export default function SOSPage() {
   }, [isSosActive, isSilent, sendLocation, message, toast]);
 
   const toggleSOS = () => {
-    setIsSosActive(prev => {
-        if(!prev === false) { // If we are turning it off
-             toast({
-                title: 'SOS Deactivated',
-                description: 'You are no longer broadcasting an emergency alert.',
-            });
-        }
-        return !prev;
-    });
+    const turningOn = !isSosActive;
+    if (!turningOn) { // If we are turning it off
+        toast({
+            title: 'SOS Deactivated',
+            description: 'You are no longer broadcasting an emergency alert.',
+        });
+    }
+    setIsSosActive(turningOn);
   };
 
   return (
