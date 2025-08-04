@@ -93,10 +93,6 @@ export default function SOSPage() {
            {isSending && <p className="mt-2 text-lg">Sending alert...</p>}
         </div>
 
-        <div className="absolute bottom-8 text-center text-gray-500">
-            <p>Your approximate GPS coordinates:</p>
-            <p className="font-mono">Lat: 34.0522, Lng: -118.2437</p>
-        </div>
       </main>
     </div>
   );
