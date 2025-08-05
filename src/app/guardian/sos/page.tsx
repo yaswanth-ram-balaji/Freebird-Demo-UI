@@ -3,13 +3,14 @@
 
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { AlertTriangle, ArrowLeft, Globe, Mic, Video, MessageSquareWarning } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Globe, Mic, Video, MessageSquareWarning, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { Textarea } from '@/components/ui/textarea';
 
 const QUICK_MESSAGES = [
     "I'm in danger, please help.",
@@ -105,8 +106,8 @@ export default function SOSPage() {
         </Link>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center text-center p-4 pt-20">
-        <div className="relative w-64 h-64 flex items-center justify-center mb-8">
+      <main className="flex-1 flex flex-col items-center justify-center text-center p-4 pt-20 overflow-y-auto">
+        <div className="relative w-64 h-64 flex items-center justify-center mb-8 flex-shrink-0">
             <Button
             size="lg"
             variant="destructive"
@@ -120,15 +121,15 @@ export default function SOSPage() {
             </Button>
         </div>
         
-        <h1 className="text-3xl font-bold mb-2">EMERGENCY SOS</h1>
-        <p className="text-lg text-gray-400 mb-8 max-w-md">
+        <h1 className="text-3xl font-bold mb-2 flex-shrink-0">EMERGENCY SOS</h1>
+        <p className="text-lg text-gray-400 mb-8 max-w-md flex-shrink-0">
           {isSosActive 
             ? "An emergency alert is being continuously broadcasted."
             : "Press the button to send an alert to your trusted contacts."
           }
         </p>
         
-        {isSosActive && <p className="mt-2 text-xl animate-pulse font-semibold text-destructive-foreground">Sending alerts...</p>}
+        {isSosActive && <p className="mt-2 text-xl animate-pulse font-semibold text-destructive-foreground flex-shrink-0">Sending alerts...</p>}
 
 
         <div className={cn("w-full max-w-md space-y-6 mt-8 transition-opacity", isSosActive ? 'opacity-50 pointer-events-none' : 'opacity-100')}>
@@ -143,6 +144,19 @@ export default function SOSPage() {
                     ))}
                 </div>
             </div>
+            
+            <div>
+                <Label className="text-lg font-semibold mb-3 flex items-center justify-center gap-2"><Pencil/> Custom Message</Label>
+                <Textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Optional: type a custom message..."
+                    className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 focus:ring-destructive"
+                    rows={3}
+                    disabled={isSosActive}
+                />
+            </div>
+
 
             <div className="grid grid-cols-2 gap-4">
                  <Button variant="outline" className="bg-gray-800/50 border-gray-700" onClick={() => handleRecord('audio')}>
@@ -174,4 +188,3 @@ export default function SOSPage() {
     </div>
   );
 }
-
