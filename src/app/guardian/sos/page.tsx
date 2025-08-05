@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { AlertTriangle, ArrowLeft, Globe, Mic, Video, MessageSquareWarning, Pencil } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Globe, MessageSquareWarning, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -88,13 +88,6 @@ export default function SOSPage() {
     setMessage(msg);
     toast({ title: "Message selected", description: `"${msg}" will be sent with your alert.`})
   }
-  
-  const handleRecord = (type: 'audio' | 'video') => {
-      toast({
-          title: 'Recording Started',
-          description: `Emergency ${type} recording has begun and will be saved.`
-      })
-  }
 
   return (
     <div className="flex flex-col h-screen bg-gray-900 text-white">
@@ -155,16 +148,6 @@ export default function SOSPage() {
                     rows={3}
                     disabled={isSosActive}
                 />
-            </div>
-
-
-            <div className="grid grid-cols-2 gap-4">
-                 <Button variant="outline" className="bg-gray-800/50 border-gray-700" onClick={() => handleRecord('audio')}>
-                    <Mic className="mr-2 h-5 w-5" /> Emergency Audio
-                </Button>
-                <Button variant="outline" className="bg-gray-800/50 border-gray-700" onClick={() => handleRecord('video')}>
-                    <Video className="mr-2 h-5 w-5" /> Emergency Video
-                </Button>
             </div>
 
           <div className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50">
