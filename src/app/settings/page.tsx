@@ -30,6 +30,12 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { isAnonymous, setIsAnonymous } = useAnonymity();
   const { toast } = useToast();
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
 
   const isDarkMode = theme === 'dark';
 
@@ -49,6 +55,10 @@ export default function SettingsPage() {
           title: 'Edit Profile',
           description: 'This is a demo. Profile editing is not implemented.',
       })
+  }
+
+  if (!isMounted) {
+    return null; // or a loading spinner
   }
 
   return (
