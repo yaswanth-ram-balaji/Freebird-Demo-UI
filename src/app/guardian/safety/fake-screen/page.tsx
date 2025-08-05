@@ -4,10 +4,29 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { X, Divide, Plus, Minus, Equal, Percent, PlusMinus } from 'lucide-react';
+import { X, Divide, Plus, Minus, Equal, Percent } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
+
+const PlusMinusIcon = ({size}: {size: number}) => (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+        <path d="M4 7h6"/>
+        <path d="M7 4v6"/>
+        <path d="M18 13h-5"/>
+        <path d="M4 17h16"/>
+    </svg>
+)
 
 export default function FakeScreenPage() {
     const [display, setDisplay] = React.useState('0');
@@ -78,12 +97,12 @@ export default function FakeScreenPage() {
             {/* Buttons */}
             <div className="grid grid-cols-4 gap-4">
                  <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleClear}>C</CalculatorButton>
-                 <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleOperation}><PlusMinus size={28}/></CalculatorButton>
+                 <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleOperation}><PlusMinusIcon size={28}/></CalculatorButton>
                  <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleOperation}><Percent size={28}/></CalculatorButton>
                  <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><Divide size={32}/></CalculatorButton>
 
                  <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('7')}>7</CalculatorButton>
-                 <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('8')}>8</CalculatorButton>
+                 <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('8')}>8</Button>
                  <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('9')}>9</CalculatorButton>
                  <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><X size={32}/></CalculatorButton>
                  
