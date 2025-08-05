@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
-import type { Chat, Message, User } from '@/lib/data';
+import type { Chat, Message, User, MessageTag } from '@/lib/data';
 import { Header } from '@/components/guardian/header';
 import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
@@ -44,7 +44,7 @@ export default function BroadcastPage() {
   }
 
 
-  const handleSendMessage = async (text: string) => {
+  const handleSendMessage = async (text: string, tag?: MessageTag) => {
     if (!selectedChatId) return;
 
     const newMessage: Message = {
@@ -52,6 +52,7 @@ export default function BroadcastPage() {
       senderId: currentUser.id,
       text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(' ', ''),
+      tag,
     };
 
     const updatedChats = chats.map(chat => {
@@ -67,39 +68,7 @@ export default function BroadcastPage() {
     })
     setChats(updatedChats);
     
-    // AI reply logic
-    const currentChat = updatedChats.find(c => c.id === selectedChatId);
-    if (currentChat) {
-      setIsAiReplying(true);
-      try {
-        const aiResponse = await getAiResponse(currentChat.messages);
-        
-        const aiMessage: Message = {
-            id: `m-${Date.now() + 1}`,
-            senderId: 'user2', // Simulate reply from Alex
-            text: aiResponse,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(' ', ''),
-        };
-        
-         setChats(prevChats =>
-          prevChats.map(chat => {
-            if (chat.id === selectedChatId) {
-              return {
-                ...chat,
-                messages: [...chat.messages, aiMessage],
-                lastMessage: aiResponse,
-                lastMessageTime: aiMessage.timestamp,
-              };
-            }
-            return chat;
-          })
-        );
-      } catch (error) {
-        console.error("Failed to get AI response:", error);
-      } finally {
-        setIsAiReplying(false);
-      }
-    }
+    // AI reply logic - let's not have AI reply in public broadcast to keep it clean
   };
 
   const handleReactToMessage = (messageId: string, emoji: string) => {

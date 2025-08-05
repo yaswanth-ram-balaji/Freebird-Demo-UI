@@ -9,12 +9,15 @@ export type User = {
   anonymous: boolean;
 };
 
+export type MessageTag = 'ALERT' | 'INFO';
+
 export const MessageSchema = z.object({
   id: z.string(),
   senderId: z.string(),
   text: z.string(),
   timestamp: z.string(),
   reactions: z.optional(z.record(z.string(), z.number())),
+  tag: z.optional(z.enum(['ALERT', 'INFO'])),
 });
 export type Message = z.infer<typeof MessageSchema>;
 
@@ -62,12 +65,12 @@ export const chats: Chat[] = [
     name: 'Public Broadcast',
     participants: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10', 'user11', 'user12'],
     messages: [
-      { id: 'm1-1', senderId: 'user6', text: '[ADMIN] Welcome to the FreeBird demo! This is a public channel for all users.', timestamp: '10:30 AM', reactions: { '👍': 5 } },
-      { id: 'm1-2', senderId: 'user2', text: 'Hey everyone! Hope you are having a great day.', timestamp: '10:31 AM', reactions: { '❤️': 2 } },
-      { id: 'm1-3', senderId: 'user4', text: 'This app looks promising! Great for staying connected.', timestamp: '11:15 AM' },
-      { id: 'm1-4', senderId: 'user7', text: 'Agreed. The safety features are a huge plus.', timestamp: '11:17 AM', reactions: { '👍': 1 } },
-      { id: 'm1-5', senderId: 'user8', text: 'Remember to check out the map view to see where your friends are.', timestamp: '11:20 AM' },
-      { id: 'm1-6', senderId: 'user6', text: '[ADMIN] Reminder: The "Emergency" button is for demo purposes. In a real scenario, it would contact authorities.', timestamp: '11:22 AM' },
+      { id: 'm1-1', senderId: 'user6', text: '[ADMIN] Welcome to the FreeBird demo! This is a public channel for all users.', timestamp: '10:30 AM', reactions: { '👍': 5 }, tag: 'INFO' },
+      { id: 'm1-2', senderId: 'user2', text: 'Hey everyone! Hope you are having a great day.', timestamp: '10:31 AM', reactions: { '❤️': 2 }, tag: 'INFO' },
+      { id: 'm1-5', senderId: 'user5', text: 'Suspicious individual spotted near the library. Please be careful.', timestamp: '11:18 AM', tag: 'ALERT' },
+      { id: 'm1-3', senderId: 'user4', text: 'This app looks promising! Great for staying connected.', timestamp: '11:15 AM', tag: 'INFO' },
+      { id: 'm1-4', senderId: 'user7', text: 'Agreed. The safety features are a huge plus.', timestamp: '11:17 AM', reactions: { '👍': 1 }, tag: 'INFO' },
+      { id: 'm1-6', senderId: 'user6', text: '[ADMIN] Reminder: The "Emergency" button is for demo purposes. In a real scenario, it would contact authorities.', timestamp: '11:22 AM', tag: 'INFO' },
     ],
     lastMessage: 'Check out the new features!',
     lastMessageTime: '11:22 AM',

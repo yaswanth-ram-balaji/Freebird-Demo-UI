@@ -2,13 +2,13 @@
 'use client';
 
 import * as React from 'react';
-import type { Chat, User, Message } from '@/lib/data';
+import type { Chat, User, Message, MessageTag } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Paperclip, Send, Smile, Copy, Bot, MoreVertical, LogOut, Download, FileText, Image as ImageIcon, Video, Pin, MessageSquare, Files, X, Megaphone, SendHorizonal, Users } from 'lucide-react';
+import { Paperclip, Send, Smile, Copy, Bot, MoreVertical, LogOut, Download, FileText, Image as ImageIcon, Video, Pin, MessageSquare, Files, X, Megaphone, SendHorizonal, Users, AlertTriangle, Info } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   DropdownMenu,
@@ -27,15 +27,17 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 type ChatViewProps = {
   chat: Chat;
   users: User[];
   currentUser: User;
-  onSendMessage: (text: string) => void;
+  onSendMessage: (text: string, tag?: MessageTag) => void;
   onReactToMessage: (messageId: string, emoji: string) => void;
   isAiReplying?: boolean;
-  onLeaveRoom: (chatId: string, chatName?: string) => void;
+  onLeaveRoom?: (chatId: string, chatName?: string) => void;
 };
 
 const ReactionPicker = ({ onSelect }: { onSelect: (emoji: string) => void }) => (
@@ -50,18 +52,24 @@ const ReactionPicker = ({ onSelect }: { onSelect: (emoji: string) => void }) => 
   </PopoverContent>
 );
 
-const QuickMessagePicker = ({ onSelect }: { onSelect: (message: string) => void }) => {
-    const quickMessages = [
-        "Class will start at 9 AM",
-        "Assignment submitted",
-        "Please check the uploaded file",
-        "Meeting at library",
-        "Exam date updated"
+const QuickMessagePicker = ({ onSelect, isAlert }: { onSelect: (message: string) => void, isAlert: boolean }) => {
+    const infoMessages = [
+        "Meeting at safe zone",
+        "All clear here",
+        "Found supplies",
     ];
+     const alertMessages = [
+        "Need help",
+        "Evacuate this area",
+        "Danger, stay away!",
+    ];
+
+    const messages = isAlert ? alertMessages : infoMessages;
+
     return (
         <PopoverContent className="p-2 w-auto">
             <div className="flex flex-col gap-1">
-                {quickMessages.map(msg => (
+                {messages.map(msg => (
                     <Button key={msg} variant="ghost" className="justify-start" onClick={() => onSelect(msg)}>
                         {msg}
                     </Button>
@@ -86,6 +94,7 @@ const sampleFiles = [
 
 export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMessage, isAiReplying = false, onLeaveRoom }: ChatViewProps) {
   const [message, setMessage] = React.useState('');
+  const [messageType, setMessageType] = React.useState<MessageTag>('INFO');
   const [showPinned, setShowPinned] = React.useState(true);
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -121,7 +130,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
-      onSendMessage(message);
+      onSendMessage(message, chat.type === 'public' ? messageType : undefined);
       setMessage('');
     }
   };
@@ -137,10 +146,12 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
   }
   
   const handleQuickMessageSelect = (msg: string) => {
-      onSendMessage(msg);
+      onSendMessage(msg, chat.type === 'public' ? messageType : undefined);
   }
 
   const chatDetails = getChatDetails();
+
+  const isGroupOrPrivate = chat.type === 'group' || chat.type === 'private';
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -148,58 +159,72 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
         <div className="flex-1 flex items-center gap-3">
              <Avatar className="h-10 w-10">
                 <AvatarImage src={chatDetails.avatar} />
-                <AvatarFallback className="bg-primary/20 text-primary font-bold">{chatDetails.fallback}</AvatarFallback>
+                <AvatarFallback className="bg-primary/20 text-primary font-bold">
+                    {chat.type === 'public' ? <Megaphone/> : (chatDetails.fallback)}
+                </AvatarFallback>
             </Avatar>
             <div>
                 <h3 className="font-bold text-lg">{chatDetails.name}</h3>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
+                   {isGroupOrPrivate && chat.code && (
+                     <div className="flex items-center gap-2">
                         <span>Code:</span>
                         <Badge variant="outline" className="cursor-pointer" onClick={handleCopyCode}>
-                            {chat.code || 'N/A'}
+                            {chat.code}
                             <Copy className="ml-2 h-3 w-3" />
                         </Badge>
                     </div>
+                   )}
                     {chat.type === 'group' && (
                         <div className="flex items-center gap-1">
                             <Users className="h-4 w-4" />
                             <span>{chat.participants.length} / 100</span>
                         </div>
                     )}
+                     {chat.type === 'public' && (
+                        <div className="flex items-center gap-1">
+                            <Users className="h-4 w-4" />
+                            <span>Nearby Users</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
         
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-5 w-5" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onLeaveRoom(chat.id, chat.name)} className="text-destructive focus:text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Leave Room</span>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        {isGroupOrPrivate && onLeaveRoom && (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-5 w-5" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onLeaveRoom(chat.id, chat.name)} className="text-destructive focus:text-destructive">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Leave Room</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        )}
 
       </header>
 
        <Tabs defaultValue="chat" className="flex-1 flex flex-col">
-            <TabsList className="w-full justify-start rounded-none bg-card p-0 border-b">
-                <TabsTrigger value="chat" className="flex-1 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none">
-                    <MessageSquare className="mr-2 h-4 w-4" /> Chat
-                </TabsTrigger>
-                <TabsTrigger value="files" className="flex-1 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none">
-                    <Files className="mr-2 h-4 w-4" /> Files
-                </TabsTrigger>
-            </TabsList>
+            {isGroupOrPrivate && (
+              <TabsList className="w-full justify-start rounded-none bg-card p-0 border-b">
+                  <TabsTrigger value="chat" className="flex-1 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none">
+                      <MessageSquare className="mr-2 h-4 w-4" /> Chat
+                  </TabsTrigger>
+                  <TabsTrigger value="files" className="flex-1 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none">
+                      <Files className="mr-2 h-4 w-4" /> Files
+                  </TabsTrigger>
+              </TabsList>
+            )}
             
             <TabsContent value="chat" className="flex-1 flex flex-col mt-0">
                  <ScrollArea className="flex-1" ref={scrollAreaRef}>
                     <div className="p-4 md:p-6 space-y-6">
-                        {showPinned && (
+                        {showPinned && chat.type === 'group' && (
                             <Alert className="bg-primary/10 border-primary/20 animate-in fade-in-50">
                                 <Pin className="h-4 w-4 text-primary" />
                                 <AlertTitle className="text-primary font-bold">Pinned Announcement</AlertTitle>
@@ -214,6 +239,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
                         {chat.messages.map((msg) => {
                             const sender = getSender(msg.senderId);
                             const isCurrentUser = sender.id === currentUser.id;
+                            const isAlert = msg.tag === 'ALERT';
 
                             return (
                             <div
@@ -238,11 +264,20 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
                                 
                                 <div
                                 className={cn(
-                                    'max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl',
-                                    isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-card text-card-foreground rounded-bl-none border shadow-sm'
+                                    'max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl relative',
+                                    isCurrentUser ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-card text-card-foreground rounded-bl-none border shadow-sm',
+                                    isAlert && !isCurrentUser && 'bg-destructive/10 border-destructive text-destructive-foreground',
+                                    isAlert && isCurrentUser && 'bg-destructive text-destructive-foreground'
                                 )}
                                 >
-                                {!isCurrentUser && <p className="text-xs font-semibold text-accent mb-1">{sender.name}</p>}
+                                {msg.tag && (
+                                    <div className={cn('absolute -top-3 -left-2 flex items-center gap-1 text-xs font-bold p-1 rounded-full', isAlert ? 'bg-destructive text-destructive-foreground' : 'bg-primary text-primary-foreground' )}>
+                                        {isAlert ? <AlertTriangle size={14} /> : <Info size={14} />}
+                                        <span>{msg.tag}</span>
+                                    </div>
+                                )}
+
+                                {!isCurrentUser && <p className={cn("text-xs font-semibold mb-1", isAlert ? 'text-red-500 dark:text-red-400' : 'text-accent')}>{sender.name}</p>}
                                 <p className="whitespace-pre-wrap">{msg.text}</p>
                                 <p className="text-xs mt-1 text-right opacity-70">{msg.timestamp}</p>
                                 {msg.reactions && (
@@ -301,23 +336,38 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
                         )}
                     </div>
                 </ScrollArea>
-                 <footer className="p-3 border-t bg-card">
+                 <footer className="p-3 border-t bg-card space-y-2">
+                    {chat.type === 'public' && (
+                        <div className="flex items-center justify-between px-2">
+                             <Label className="text-sm font-medium">Message Type</Label>
+                             <RadioGroup defaultValue="INFO" value={messageType} onValueChange={(v: MessageTag) => setMessageType(v)} className="flex items-center gap-4">
+                                <div>
+                                    <RadioGroupItem value="INFO" id="r-info" />
+                                    <Label htmlFor="r-info" className="ml-2">Info</Label>
+                                </div>
+                                <div>
+                                    <RadioGroupItem value="ALERT" id="r-alert" className="border-destructive text-destructive focus:ring-destructive" />
+                                    <Label htmlFor="r-alert" className="ml-2">Alert</Label>
+                                </div>
+                             </RadioGroup>
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit} className="flex items-center gap-2">
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="ghost" size="icon" type="button" aria-label="Send a quick message">
-                                    <Megaphone className="h-5 w-5 text-accent" />
+                                    <Megaphone className={cn("h-5 w-5", messageType === 'ALERT' ? 'text-destructive' : 'text-accent')} />
                                 </Button>
                             </PopoverTrigger>
-                            <QuickMessagePicker onSelect={handleQuickMessageSelect} />
+                            <QuickMessagePicker onSelect={handleQuickMessageSelect} isAlert={messageType === 'ALERT'} />
                         </Popover>
 
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                     <Button variant="ghost" size="icon" type="button"><Paperclip className="h-5 w-5" /></Button>
+                                     <Button variant="ghost" size="icon" type="button" onClick={() => toast({title: "Feature not implemented"})}><Paperclip className="h-5 w-5" /></Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Attach File</TooltipContent>
+                                <TooltipContent>Attach File (1 image allowed)</TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
 
