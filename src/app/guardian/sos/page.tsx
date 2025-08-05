@@ -99,9 +99,9 @@ export default function SOSPage() {
         </Link>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-between text-center p-4 pt-20 overflow-y-auto">
+      <main className="flex-1 flex flex-col items-center justify-between text-center p-4 pt-16 overflow-y-auto">
         <div className={cn("w-full max-w-md space-y-6 transition-opacity", isSosActive ? 'opacity-50 pointer-events-none' : 'opacity-100')}>
-            
+            <h1 className="text-3xl font-bold mb-2 flex-shrink-0">EMERGENCY SOS</h1>
             <div>
                 <Label className="text-lg font-semibold mb-3 flex items-center justify-center gap-2"><MessageSquareWarning/> Quick Emergency Messages</Label>
                 <div className="grid grid-cols-2 gap-2">
@@ -157,7 +157,6 @@ export default function SOSPage() {
                 </Button>
             </div>
             
-            <h1 className="text-3xl font-bold mb-2 flex-shrink-0">EMERGENCY SOS</h1>
             <p className="text-lg text-gray-400 mb-4 max-w-md flex-shrink-0">
             {isSosActive 
                 ? "An emergency alert is being continuously broadcasted."
@@ -172,4 +171,3 @@ export default function SOSPage() {
     </div>
   );
 }
-
