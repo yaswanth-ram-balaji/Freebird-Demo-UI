@@ -100,7 +100,7 @@ export default function SOSPage() {
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center text-center p-4 pt-20 overflow-y-auto">
-        <div className="relative w-64 h-64 flex items-center justify-center mb-8 flex-shrink-0">
+        <div className="relative w-48 h-48 flex items-center justify-center mb-8 flex-shrink-0">
             <Button
             size="lg"
             variant="destructive"
