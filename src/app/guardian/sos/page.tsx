@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { AlertTriangle, ArrowLeft, Globe, MessageSquareWarning, Pencil } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Globe, MessageSquareWarning, Pencil, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -24,6 +24,7 @@ export default function SOSPage() {
   const [isSosActive, setIsSosActive] = useState(false);
   const [isSilent, setIsSilent] = useState(false);
   const [sendLocation, setSendLocation] = useState(true);
+  const [sendToTrustedContactsOnly, setSendToTrustedContactsOnly] = useState(true);
   const [message, setMessage] = useState('');
   const { toast } = useToast();
   const alertCount = useRef(0);
@@ -38,7 +39,7 @@ export default function SOSPage() {
       const sendAlertToast = () => {
         if (alertCount.current < MAX_ALERTS_TO_SHOW) {
           let title = alertCount.current === 0 ? 'SOS Activated' : 'SOS Alert Sent (Continuous)';
-          let description = `Emergency alert sent to trusted contacts.`;
+          let description = `Emergency alert sent to ${sendToTrustedContactsOnly ? 'trusted contacts' : 'all nearby users'}.`;
           
           if (sendLocation) {
             description += ' Location is being shared.';
@@ -71,7 +72,7 @@ export default function SOSPage() {
         clearInterval(intervalId);
       }
     };
-  }, [isSosActive, isSilent, sendLocation, message, toast]);
+  }, [isSosActive, isSilent, sendLocation, sendToTrustedContactsOnly, message, toast]);
 
   const toggleSOS = () => {
     const turningOn = !isSosActive;
@@ -126,6 +127,14 @@ export default function SOSPage() {
             </div>
 
           <div className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50">
+            <Label htmlFor="trusted-contacts-only" className="flex items-center gap-2 text-base">
+                <Shield className="h-5 w-5" />
+                Send to Trusted Contacts Only
+            </Label>
+            <Switch id="trusted-contacts-only" checked={sendToTrustedContactsOnly} onCheckedChange={setSendToTrustedContactsOnly} disabled={isSosActive}/>
+          </div>
+            
+          <div className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50">
             <Label htmlFor="location-mode" className="flex items-center gap-2 text-base">
                 <Globe className="h-5 w-5" />
                 Share Location
@@ -160,7 +169,7 @@ export default function SOSPage() {
             <p className="text-lg text-gray-400 mb-4 max-w-md flex-shrink-0">
             {isSosActive 
                 ? "An emergency alert is being continuously broadcasted."
-                : "Press the button to send an alert to your trusted contacts."
+                : "Press the button to send an alert."
             }
             </p>
             
