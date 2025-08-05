@@ -11,9 +11,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useTheme } from '@/context/theme-provider';
 import { useAnonymity } from '@/context/anonymity-provider';
+import { useToast } from '@/hooks/use-toast';
 
-const SettingsItem = ({ icon: Icon, title, description, action }: { icon: React.ElementType, title: string, description?: string, action: React.ReactNode }) => (
-  <div className="flex items-center py-4">
+const SettingsItem = ({ icon: Icon, title, description, action, onClick }: { icon: React.ElementType, title: string, description?: string, action: React.ReactNode, onClick?: () => void }) => (
+  <div className="flex items-center py-4 cursor-pointer" onClick={onClick}>
     <div className="flex items-center gap-4">
       <Icon className="w-6 h-6 text-muted-foreground" />
       <div className="flex-1">
@@ -21,19 +22,34 @@ const SettingsItem = ({ icon: Icon, title, description, action }: { icon: React.
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>
     </div>
-    <div className="ml-auto">{action}</div>
+    <div className="ml-auto" onClick={(e) => e.stopPropagation()}>{action}</div>
   </div>
 );
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { isAnonymous, setIsAnonymous } = useAnonymity();
+  const { toast } = useToast();
 
   const isDarkMode = theme === 'dark';
 
   const toggleDarkMode = (checked: boolean) => {
     setTheme(checked ? 'dark' : 'light');
   };
+  
+  const handleLogout = () => {
+      toast({
+          title: 'Logged Out',
+          description: 'You have been successfully logged out.',
+      })
+  }
+  
+  const handleEditProfile = () => {
+      toast({
+          title: 'Edit Profile',
+          description: 'This is a demo. Profile editing is not implemented.',
+      })
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -61,7 +77,7 @@ export default function SettingsPage() {
                 <CardTitle>{isAnonymous ? 'Anonymous' : 'Demo User'}</CardTitle>
                 <p className="text-muted-foreground">Status: Safe and sound</p>
               </div>
-              <Button variant="outline" size="sm" className="ml-auto">Edit Profile</Button>
+              <Button variant="outline" size="sm" className="ml-auto" onClick={handleEditProfile}>Edit Profile</Button>
             </CardHeader>
           </Card>
           
@@ -75,12 +91,14 @@ export default function SettingsPage() {
                   description="Hide your identity in public chats"
                   action={<Switch checked={isAnonymous} onCheckedChange={setIsAnonymous} />}
                 />
-                <SettingsItem
-                  icon={Shield}
-                  title="Trusted Contacts"
-                  description="Manage who sees your status"
-                  action={<Button variant="ghost" size="icon"><ChevronRight/></Button>}
-                />
+                <Link href="/guardian/safety/contacts">
+                    <SettingsItem
+                      icon={Shield}
+                      title="Trusted Contacts"
+                      description="Manage who sees your status"
+                      action={<Button variant="ghost" size="icon"><ChevronRight/></Button>}
+                    />
+                </Link>
                  <SettingsItem
                   icon={QrCode}
                   title="Sync Contacts"
@@ -98,17 +116,11 @@ export default function SettingsPage() {
           <div className="mt-8">
             <h3 className="text-lg font-semibold mb-2">Appearance</h3>
             <Card>
-              <CardContent className="divide-y">
+              <CardContent>
                 <SettingsItem
                   icon={isDarkMode ? Moon : Sun}
                   title="Dark Mode"
                   action={<Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />}
-                />
-                <SettingsItem
-                  icon={Palette}
-                  title="Theme"
-                  description="Customize app colors"
-                   action={<Button variant="ghost" size="icon"><ChevronRight/></Button>}
                 />
               </CardContent>
             </Card>
@@ -120,7 +132,8 @@ export default function SettingsPage() {
                  <SettingsItem
                     icon={LogOut}
                     title="Logout"
-                    action={<Button variant="destructive" size="sm">Logout</Button>}
+                    onClick={handleLogout}
+                    action={<Button variant="destructive" size="sm" onClick={handleLogout}>Logout</Button>}
                   />
               </CardContent>
             </Card>
