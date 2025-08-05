@@ -92,7 +92,7 @@ export default function SOSPage() {
   return (
     <div className="flex flex-col h-screen bg-gray-900 text-white">
       <header className="absolute top-0 left-0 w-full p-4 z-10">
-        <Link href="/guardian/safety" passHref>
+        <Link href="/" passHref>
           <Button variant="ghost" size="icon" disabled={isSosActive}>
             <ArrowLeft className="h-6 w-6" />
           </Button>
