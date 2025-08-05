@@ -99,33 +99,8 @@ export default function SOSPage() {
         </Link>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center text-center p-4 pt-20 overflow-y-auto">
-        <div className="relative w-48 h-48 flex items-center justify-center mb-8 flex-shrink-0">
-            <Button
-            size="lg"
-            variant="destructive"
-            className={cn(
-                "relative w-48 h-48 rounded-full shadow-2xl flex items-center justify-center text-4xl font-bold z-10",
-                isSosActive && 'animate-pulse-strong'
-            )}
-            onClick={toggleSOS}
-            >
-            {isSosActive ? "STOP" : "SOS"}
-            </Button>
-        </div>
-        
-        <h1 className="text-3xl font-bold mb-2 flex-shrink-0">EMERGENCY SOS</h1>
-        <p className="text-lg text-gray-400 mb-8 max-w-md flex-shrink-0">
-          {isSosActive 
-            ? "An emergency alert is being continuously broadcasted."
-            : "Press the button to send an alert to your trusted contacts."
-          }
-        </p>
-        
-        {isSosActive && <p className="mt-2 text-xl animate-pulse font-semibold text-destructive-foreground flex-shrink-0">Sending alerts...</p>}
-
-
-        <div className={cn("w-full max-w-md space-y-6 mt-8 transition-opacity", isSosActive ? 'opacity-50 pointer-events-none' : 'opacity-100')}>
+      <main className="flex-1 flex flex-col items-center justify-between text-center p-4 pt-20 overflow-y-auto">
+        <div className={cn("w-full max-w-md space-y-6 transition-opacity", isSosActive ? 'opacity-50 pointer-events-none' : 'opacity-100')}>
             
             <div>
                 <Label className="text-lg font-semibold mb-3 flex items-center justify-center gap-2"><MessageSquareWarning/> Quick Emergency Messages</Label>
@@ -167,7 +142,34 @@ export default function SOSPage() {
           </div>
         </div>
 
+        <div className="flex flex-col items-center justify-center pt-8">
+            <div className="relative w-48 h-48 flex items-center justify-center mb-8 flex-shrink-0">
+                <Button
+                size="lg"
+                variant="destructive"
+                className={cn(
+                    "relative w-48 h-48 rounded-full shadow-2xl flex items-center justify-center text-4xl font-bold z-10",
+                    isSosActive && 'animate-pulse-strong'
+                )}
+                onClick={toggleSOS}
+                >
+                {isSosActive ? "STOP" : "SOS"}
+                </Button>
+            </div>
+            
+            <h1 className="text-3xl font-bold mb-2 flex-shrink-0">EMERGENCY SOS</h1>
+            <p className="text-lg text-gray-400 mb-4 max-w-md flex-shrink-0">
+            {isSosActive 
+                ? "An emergency alert is being continuously broadcasted."
+                : "Press the button to send an alert to your trusted contacts."
+            }
+            </p>
+            
+            {isSosActive && <p className="text-xl animate-pulse font-semibold text-destructive-foreground flex-shrink-0">Sending alerts...</p>}
+        </div>
+
       </main>
     </div>
   );
 }
+
