@@ -35,18 +35,24 @@ const NoChatSelected = () => (
 
 function RoomsPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const requestedChatId = searchParams.get('chatId');
   const { toast } = useToast();
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const [requestedChatId, setRequestedChatId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAnonymous } = useAnonymity();
   const [isAiReplying, setIsAiReplying] = useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setRequestedChatId(params.get('chatId'));
+    }
+  }, []);
   
   useEffect(() => {
     setIsMounted(true);
