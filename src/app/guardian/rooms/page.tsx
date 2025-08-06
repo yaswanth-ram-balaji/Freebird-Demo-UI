@@ -2,8 +2,10 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -281,10 +283,16 @@ function LoadingFallback() {
   )
 }
 
+const DynamicRoomsPageWithSearchParams = dynamic(
+  () => Promise.resolve(RoomsPageWithSearchParams),
+  { 
+    ssr: false,
+    loading: () => <LoadingFallback />
+  }
+);
+
 export default function RoomsPage() {
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <RoomsPageWithSearchParams />
-    </Suspense>
+    <DynamicRoomsPageWithSearchParams />
   )
 }
