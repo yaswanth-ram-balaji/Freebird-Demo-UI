@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -21,6 +21,13 @@ import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
 
+function RoomsPageWithSearchParams() {
+  const searchParams = useSearchParams();
+  const requestedChatId = searchParams.get('chatId');
+  
+  return <RoomsPageContent requestedChatId={requestedChatId} />;
+}
+
 const STORAGE_KEY = 'guardianlink-group-chats';
 const ALL_CHATS_STORAGE_KEY = 'guardianlink-all-chats';
 
@@ -33,26 +40,18 @@ const NoChatSelected = () => (
   </div>
 );
 
-function RoomsPageContent() {
+function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null }) {
   const router = useRouter();
   const { toast } = useToast();
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  const [requestedChatId, setRequestedChatId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAnonymous } = useAnonymity();
   const [isAiReplying, setIsAiReplying] = useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      setRequestedChatId(params.get('chatId'));
-    }
-  }, []);
   
   useEffect(() => {
     setIsMounted(true);
@@ -285,7 +284,7 @@ function LoadingFallback() {
 export default function RoomsPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <RoomsPageContent />
+      <RoomsPageWithSearchParams />
     </Suspense>
   )
 }
