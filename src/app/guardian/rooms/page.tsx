@@ -2,7 +2,6 @@
 'use client';
 
 import * as React from 'react';
-import dynamic from 'next/dynamic';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -23,13 +22,6 @@ import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
 
-function RoomsPageWithSearchParams() {
-  const searchParams = useSearchParams();
-  const requestedChatId = searchParams.get('chatId');
-  
-  return <RoomsPageContent requestedChatId={requestedChatId} />;
-}
-
 const STORAGE_KEY = 'guardianlink-group-chats';
 const ALL_CHATS_STORAGE_KEY = 'guardianlink-all-chats';
 
@@ -42,7 +34,9 @@ const NoChatSelected = () => (
   </div>
 );
 
-function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null }) {
+function RoomsPageContent() {
+  const searchParams = useSearchParams();
+  const requestedChatId = searchParams.get('chatId');
   const router = useRouter();
   const { toast } = useToast();
 
@@ -275,24 +269,14 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
   );
 }
 
-function LoadingFallback() {
-  return (
-    <div className="flex items-center justify-center h-screen w-screen bg-background">
-      <Loader className="h-8 w-8 animate-spin text-primary" />
-    </div>
-  )
-}
-
-const DynamicRoomsPageWithSearchParams = dynamic(
-  () => Promise.resolve(RoomsPageWithSearchParams),
-  { 
-    ssr: false,
-    loading: () => <LoadingFallback />
-  }
-);
-
 export default function RoomsPage() {
   return (
-    <DynamicRoomsPageWithSearchParams />
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen w-screen bg-background">
+        <Loader className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <RoomsPageContent />
+    </Suspense>
   )
 }
