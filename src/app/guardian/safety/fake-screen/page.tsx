@@ -51,7 +51,7 @@ export default function FakeScreenPage() {
                 className="z-0"
                 data-ai-hint="nature wallpaper"
             />
-            <div className="absolute inset-0 bg-black/30 z-10" />
+            <div className="absolute inset-0 bg-black/40 z-10" />
 
             <div className="relative z-20 flex flex-col h-full p-8">
                 {/* Status Bar */}
@@ -75,7 +75,7 @@ export default function FakeScreenPage() {
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col justify-center items-center text-center -mt-16">
-                    <div className="text-8xl font-thin tracking-tighter" suppressHydrationWarning>
+                    <div className="text-7xl font-thin tracking-tighter" suppressHydrationWarning>
                         {time || '00:00'}
                     </div>
                     <div className="text-xl font-medium mt-1" suppressHydrationWarning>
