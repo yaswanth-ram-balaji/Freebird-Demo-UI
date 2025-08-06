@@ -59,6 +59,7 @@ export default function SafetyDashboardPage() {
         <div className="container max-w-4xl mx-auto space-y-8">
           
           <div onClick={handleSosClick} className="block">
+            <Link href="/guardian/sos">
               <Card className="bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors cursor-pointer shadow-lg hover:shadow-xl animate-pulse-strong">
                   <CardContent className="p-6 flex items-center justify-center text-center">
                       <div className="flex items-center gap-4">
@@ -70,6 +71,7 @@ export default function SafetyDashboardPage() {
                       </div>
                   </CardContent>
               </Card>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
