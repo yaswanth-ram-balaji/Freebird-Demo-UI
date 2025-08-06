@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 const FeatureCard = ({ icon: Icon, title, description, href, isEmergency = false }: { icon: React.ElementType, title: string, description: string, href: string, isEmergency?: boolean }) => (
   <Link href={href} className="block transform transition-transform duration-300 hover:scale-105">
@@ -31,6 +32,16 @@ const FeatureCard = ({ icon: Icon, title, description, href, isEmergency = false
 
 export default function SafetyDashboardPage() {
     const [isSirenEnabled, setIsSirenEnabled] = React.useState(false);
+    const { toast } = useToast();
+
+    const handleSosClick = () => {
+        toast({
+            title: 'SOS Alert Sent',
+            description: "Your location and an emergency alert have been sent to your trusted contacts.",
+            variant: 'destructive',
+            duration: 5000,
+        });
+    };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -47,8 +58,8 @@ export default function SafetyDashboardPage() {
       <main className="flex-1 p-4 md:p-8">
         <div className="container max-w-4xl mx-auto space-y-8">
           
-          <Link href="/guardian/sos" className="block">
-              <Card className="bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors cursor-pointer shadow-lg hover:shadow-xl">
+          <div onClick={handleSosClick} className="block">
+              <Card className="bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors cursor-pointer shadow-lg hover:shadow-xl animate-pulse-strong">
                   <CardContent className="p-6 flex items-center justify-center text-center">
                       <div className="flex items-center gap-4">
                           <PhoneOutgoing className="h-10 w-10" />
@@ -59,7 +70,7 @@ export default function SafetyDashboardPage() {
                       </div>
                   </CardContent>
               </Card>
-          </Link>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <FeatureCard
