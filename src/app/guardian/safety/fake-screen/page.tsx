@@ -27,18 +27,13 @@ export default function FakeScreenPage() {
         // Subtle SOS activation trigger
         const sosTimer = setTimeout(() => {
             setIsSosSubtlyActive(true);
-            toast({
-                title: "Silent SOS Active",
-                description: "The fake screen is on. Silent alerts are being sent in the background.",
-                variant: 'destructive'
-            });
         }, 3000); // Activate after 3 seconds
 
         return () => {
             clearInterval(intervalId);
             clearTimeout(sosTimer);
         };
-    }, [toast]);
+    }, []);
 
     return (
         <div className="relative flex flex-col h-screen w-screen text-white overflow-hidden">
