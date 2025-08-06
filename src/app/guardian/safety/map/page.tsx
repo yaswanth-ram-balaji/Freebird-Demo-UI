@@ -10,17 +10,14 @@ import { MapView } from '@/components/guardian/map-view';
 export default function EmergencyMapPage() {
   return (
     <div className="flex flex-col h-screen bg-background">
-      <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex items-center h-16 px-4 mx-auto md:px-6">
-          <Link href="/guardian/safety" passHref>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <h1 className="ml-4 text-xl font-bold">Emergency Map</h1>
-        </div>
+      <header className="absolute top-0 left-0 z-20 p-4">
+        <Link href="/guardian/safety" passHref>
+          <Button variant="ghost" size="icon" className="bg-background/50 hover:bg-background/80 backdrop-blur-sm">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </Link>
       </header>
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1">
         <MapView />
       </main>
     </div>
