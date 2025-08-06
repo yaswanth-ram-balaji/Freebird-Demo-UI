@@ -12,33 +12,23 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
-const FeatureCard = ({ icon: Icon, title, description, href, isEmergency = false, action, onClick }: { icon: React.ElementType, title: string, description: string, href?: string, isEmergency?: boolean, action?: React.ReactNode, onClick?: () => void }) => {
-  const content = (
-      <Card className={cn("h-full", isEmergency ? 'bg-destructive/10 border-destructive/20' : '', onClick && !href ? 'cursor-pointer' : '')} onClick={onClick}>
-        <CardHeader>
-          <div className="flex items-center gap-4">
-              <div className={cn("flex items-center justify-center w-12 h-12 rounded-full", isEmergency ? 'bg-destructive/20 text-destructive' : 'bg-primary/10 text-primary')}>
-                <Icon className="w-6 h-6" />
-              </div>
-              <div className="flex-1">
-                   <CardTitle>{title}</CardTitle>
-                   <CardDescription className="text-muted-foreground mt-1">{description}</CardDescription>
-              </div>
-              {action}
-          </div>
-        </CardHeader>
-      </Card>
+const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, action }: { icon: React.ElementType, title: string, description: string, isEmergency?: boolean, action?: React.ReactNode }) => {
+  return (
+    <Card className={cn("h-full transform transition-transform duration-300 hover:scale-105", isEmergency ? 'bg-destructive/10 border-destructive/20' : '')}>
+      <CardHeader>
+        <div className="flex items-center gap-4">
+            <div className={cn("flex items-center justify-center w-12 h-12 rounded-full", isEmergency ? 'bg-destructive/20 text-destructive' : 'bg-primary/10 text-primary')}>
+              <Icon className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+                 <CardTitle>{title}</CardTitle>
+                 <CardDescription className="text-muted-foreground mt-1">{description}</CardDescription>
+            </div>
+            {action}
+        </div>
+      </CardHeader>
+    </Card>
   );
-  
-  if (href) {
-    return (
-      <Link href={href} className="block transform transition-transform duration-300 hover:scale-105">
-        {content}
-      </Link>
-    );
-  }
-  
-  return <div className="block transform transition-transform duration-300 hover:scale-105">{content}</div>;
 };
 
 
@@ -70,8 +60,8 @@ export default function SafetyDashboardPage() {
       <main className="flex-1 p-4 md:p-8">
         <div className="container max-w-4xl mx-auto space-y-8">
           
-          <div onClick={handleSosClick} className="block transform transition-transform duration-300 hover:scale-105 cursor-pointer">
-              <Card className="bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors shadow-lg hover:shadow-xl">
+          <div onClick={handleSosClick} className="cursor-pointer">
+              <Card className="bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
                   <CardContent className="p-6 flex items-center justify-center text-center">
                       <div className="flex items-center gap-4">
                           <PhoneOutgoing className="h-10 w-10" />
@@ -85,30 +75,35 @@ export default function SafetyDashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <FeatureCard
+            <Link href="/guardian/safety/contacts">
+              <FeatureCard
                 icon={UserCheck}
                 title="Trusted Contacts"
                 description="Manage who receives your SOS alerts"
-                href="/guardian/safety/contacts"
               />
-            <FeatureCard
+            </Link>
+            <Link href="/guardian/safety/map">
+              <FeatureCard
                 icon={Map}
                 title="Emergency Map View"
                 description="Find nearby safe zones like police stations"
-                href="/guardian/safety/map"
               />
-            <FeatureCard
+            </Link>
+            <Link href="/guardian/safety/fake-screen">
+              <FeatureCard
                 icon={Calculator}
                 title="Fake Screen Mode"
                 description="Disguise the app while sending silent alerts"
-                href="/guardian/safety/fake-screen"
               />
-             <FeatureCard
+            </Link>
+            <div>
+              <FeatureCard
                 icon={Siren}
                 title="Danger Sound Alarm"
                 description="Play a loud siren to attract attention"
                 action={<Switch id="siren-mode" checked={isSirenEnabled} onCheckedChange={setIsSirenEnabled} />}
               />
+            </div>
           </div>
         </div>
       </main>
