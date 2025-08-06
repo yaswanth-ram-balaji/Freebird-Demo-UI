@@ -56,7 +56,7 @@ export default function FakeScreenPage() {
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col justify-center items-center text-center -mt-16">
+                <div className="flex-1 flex flex-col items-center text-center pt-24">
                     <div className="text-5xl font-normal tracking-tight" suppressHydrationWarning>
                         {time || '00:00'}
                     </div>
