@@ -75,7 +75,7 @@ export default function FakeScreenPage() {
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col justify-center items-center text-center -mt-16">
-                    <div className="text-7xl font-thin tracking-tighter" suppressHydrationWarning>
+                    <div className="text-5xl font-normal tracking-tight" suppressHydrationWarning>
                         {time || '00:00'}
                     </div>
                     <div className="text-xl font-medium mt-1" suppressHydrationWarning>
