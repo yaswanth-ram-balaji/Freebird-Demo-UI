@@ -4,9 +4,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Wifi, Signal, BatteryFull, AlertTriangle } from 'lucide-react';
+import { Wifi, Signal, BatteryFull } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
 export default function FakeScreenPage() {
@@ -58,20 +57,8 @@ export default function FakeScreenPage() {
                 <div className="flex justify-end items-center gap-2 text-sm">
                     <Signal size={16} />
                     <Wifi size={16} />
-                    <BatteryFull size={20} />
+                    <BatteryFull size={20} className={cn(isSosSubtlyActive && "text-red-500 animate-pulse")} />
                 </div>
-
-                {isSosSubtlyActive && (
-                     <div className="absolute top-16 left-4 right-4">
-                        <Alert variant="destructive" className="bg-red-900/50 border-red-500/30 text-white animate-pulse">
-                          <AlertTriangle className="h-4 w-4 text-red-400" />
-                          <AlertTitle className="font-bold text-red-300">SILENT SOS ACTIVE</AlertTitle>
-                          <AlertDescription>
-                            Broadcasting location to trusted contacts.
-                          </AlertDescription>
-                        </Alert>
-                    </div>
-                )}
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col justify-center items-center text-center -mt-16">
