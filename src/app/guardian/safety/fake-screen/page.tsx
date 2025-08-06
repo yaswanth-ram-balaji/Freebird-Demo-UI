@@ -2,40 +2,31 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { X, Divide, Plus, Minus, Equal, Percent } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Wifi, Signal, BatteryFull, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
-
-const PlusMinusIcon = ({size}: {size: number}) => (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-        <path d="M4 7h6"/>
-        <path d="M7 4v6"/>
-        <path d="M18 13h-5"/>
-        <path d="M4 17h16"/>
-    </svg>
-)
+import { cn } from '@/lib/utils';
 
 export default function FakeScreenPage() {
-    const [display, setDisplay] = React.useState('0');
-    const [isSosSubtlyActive, setIsSosSubtlyActive] = React.useState(false);
+    const [time, setTime] = useState('');
+    const [date, setDate] = useState('');
+    const [isSosSubtlyActive, setIsSosSubtlyActive] = useState(false);
     const { toast } = useToast();
 
-    React.useEffect(() => {
+    useEffect(() => {
+        const updateDateTime = () => {
+            const now = new Date();
+            setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(' ', ''));
+            setDate(now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' }));
+        };
+
+        updateDateTime();
+        const intervalId = setInterval(updateDateTime, 1000 * 60); // Update every minute
+
         // Subtle SOS activation trigger
-        const timer = setTimeout(() => {
+        const sosTimer = setTimeout(() => {
             setIsSosSubtlyActive(true);
             toast({
                 title: "Silent SOS Active",
@@ -44,44 +35,34 @@ export default function FakeScreenPage() {
             });
         }, 3000); // Activate after 3 seconds
 
-        return () => clearTimeout(timer);
+        return () => {
+            clearInterval(intervalId);
+            clearTimeout(sosTimer);
+        };
     }, [toast]);
 
-    const handleButtonClick = (value: string) => {
-        if (display === '0' && value !== '.') {
-            setDisplay(value);
-        } else {
-            setDisplay(prev => prev + value);
-        }
-    };
-    
-    const handleClear = () => setDisplay('0');
-    
-    const handleOperation = () => {
-        toast({
-            title: "Calculator is for display only",
-            description: "This is a fake screen to protect you. SOS alerts are running in the background."
-        });
-    };
-
-    const CalculatorButton = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
-        return (
-            <Button 
-                className={cn("h-20 w-20 rounded-full text-3xl font-light", className)}
-                variant="ghost"
-                onClick={onClick}
-            >
-                {children}
-            </Button>
-        );
-    }
-
     return (
-        <div className="flex flex-col h-screen bg-black text-white items-center justify-end p-8">
-            
-            <div className="w-full max-w-sm flex-1 flex flex-col justify-end">
+        <div className="relative flex flex-col h-screen w-screen text-white overflow-hidden">
+            <Image
+                src="https://placehold.co/1080x1920"
+                alt="Lock screen wallpaper"
+                layout="fill"
+                objectFit="cover"
+                className="z-0"
+                data-ai-hint="nature wallpaper"
+            />
+            <div className="absolute inset-0 bg-black/30 z-10" />
+
+            <div className="relative z-20 flex flex-col h-full p-8">
+                {/* Status Bar */}
+                <div className="flex justify-end items-center gap-2 text-sm">
+                    <Signal size={16} />
+                    <Wifi size={16} />
+                    <BatteryFull size={20} />
+                </div>
+
                 {isSosSubtlyActive && (
-                     <div className="absolute top-4 left-4 right-4">
+                     <div className="absolute top-16 left-4 right-4">
                         <Alert variant="destructive" className="bg-red-900/50 border-red-500/30 text-white animate-pulse">
                           <AlertTriangle className="h-4 w-4 text-red-400" />
                           <AlertTitle className="font-bold text-red-300">SILENT SOS ACTIVE</AlertTitle>
@@ -91,36 +72,20 @@ export default function FakeScreenPage() {
                         </Alert>
                     </div>
                 )}
-                {/* Display */}
-                <div className="text-right mb-8">
-                    <p className="text-8xl font-thin tracking-tighter break-all">{display}</p>
+
+                {/* Main Content */}
+                <div className="flex-1 flex flex-col justify-center items-center text-center -mt-16">
+                    <div className="text-8xl font-thin tracking-tighter" suppressHydrationWarning>
+                        {time || '00:00'}
+                    </div>
+                    <div className="text-xl font-medium mt-1" suppressHydrationWarning>
+                        {date || 'Loading...'}
+                    </div>
                 </div>
-                
-                {/* Buttons */}
-                <div className="grid grid-cols-4 gap-4">
-                     <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleClear}>C</CalculatorButton>
-                     <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleOperation}><PlusMinusIcon size={28}/></CalculatorButton>
-                     <CalculatorButton className="bg-gray-400 text-black hover:bg-gray-300" onClick={handleOperation}><Percent size={28}/></CalculatorButton>
-                     <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><Divide size={32}/></CalculatorButton>
 
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('7')}>7</CalculatorButton>
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('8')}>8</CalculatorButton>
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('9')}>9</CalculatorButton>
-                     <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><X size={32}/></CalculatorButton>
-                     
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('4')}>4</CalculatorButton>
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('5')}>5</CalculatorButton>
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('6')}>6</CalculatorButton>
-                     <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><Minus size={32}/></CalculatorButton>
-
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('1')}>1</CalculatorButton>
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('2')}>2</CalculatorButton>
-                     <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('3')}>3</CalculatorButton>
-                     <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><Plus size={32}/></CalculatorButton>
-
-                    <CalculatorButton className="col-span-2 w-full justify-start pl-8 bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('0')}>0</CalculatorButton>
-                    <CalculatorButton className="bg-gray-700 hover:bg-gray-600" onClick={() => handleButtonClick('.')}>.</CalculatorButton>
-                    <CalculatorButton className="bg-orange-500 hover:bg-orange-400" onClick={handleOperation}><Equal size={32}/></CalculatorButton>
+                {/* Unlock prompt */}
+                <div className="flex flex-col items-center">
+                    <p className="text-lg font-medium">Swipe up to unlock</p>
                 </div>
             </div>
         </div>
