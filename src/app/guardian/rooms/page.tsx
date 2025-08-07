@@ -275,8 +275,13 @@ function LoadingFallback() {
 }
 
 export default function RoomsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+<<<<<<< HEAD
   const params = React.use(searchParams);
   const chatId = typeof params.chatId === 'string' ? params.chatId : null;
+=======
+  const unwrappedSearchParams = React.use(searchParams);
+  const chatId = typeof unwrappedSearchParams.chatId === 'string' ? unwrappedSearchParams.chatId : null;
+>>>>>>> 6b1483b (I see this error with the app, reported by NextJS, please fix it. The er)
 
   return (
     <Suspense fallback={<LoadingFallback />}>
