@@ -4,7 +4,6 @@
 import * as React from 'react';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -34,9 +33,7 @@ const NoChatSelected = () => (
   </div>
 );
 
-function RoomsPageContent() {
-  const searchParams = useSearchParams();
-  const requestedChatId = searchParams.get('chatId');
+function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null }) {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -269,14 +266,21 @@ function RoomsPageContent() {
   );
 }
 
-export default function RoomsPage() {
+function LoadingFallback() {
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center h-screen w-screen bg-background">
-        <Loader className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    }>
-      <RoomsPageContent />
+    <div className="flex items-center justify-center h-screen w-screen bg-background">
+      <Loader className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  )
+}
+
+export default function RoomsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const params = React.use(searchParams);
+  const chatId = typeof params.chatId === 'string' ? params.chatId : null;
+
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <RoomsPageContent requestedChatId={chatId} />
     </Suspense>
   )
 }
