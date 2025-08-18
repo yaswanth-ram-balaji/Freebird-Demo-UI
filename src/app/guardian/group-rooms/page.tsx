@@ -102,11 +102,14 @@ export default function GroupRoomsPage() {
         toast({ title: 'Please enter a room code', variant: 'destructive'});
         return;
     }
-    // In a real app, you'd find the room with this code.
-    // For this demo, we'll just find the first available group chat to join.
-    const roomToJoin = groupChats.find(chat => chat.code?.toUpperCase() === joinRoomCode.toUpperCase());
+    // This is a simplified demo. A real app would validate the code against a backend.
+    // For now, we just find a stored room with that code.
+    const storedChats = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const roomToJoin = storedChats.find((chat: Chat) => chat.code?.toUpperCase() === joinRoomCode.toUpperCase());
 
     if (roomToJoin) {
+        // Here, you would typically add the currentUser to the room's participants list.
+        // For this demo, we will just navigate to the room.
         router.push(`/guardian/rooms?chatId=${roomToJoin.id}`);
         setJoinRoomCode('');
         setIsJoinDialogOpen(false);

@@ -1,8 +1,9 @@
+
 'use client';
 
 import * as React from 'react';
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -16,7 +17,7 @@ import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
 
-const STORAGE_KEY = 'guardianlink-group-chats';
+const GROUP_CHATS_STORAGE_KEY = 'guardianlink-group-chats';
 const ALL_CHATS_STORAGE_KEY = 'guardianlink-all-chats';
 
 const NoChatSelected = () => (
@@ -46,13 +47,13 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
       const storedAllChats = localStorage.getItem(ALL_CHATS_STORAGE_KEY);
       const allChats = storedAllChats ? JSON.parse(storedAllChats) : initialChats.filter(c => c.type !== 'group');
 
-      const storedGroupChats = localStorage.getItem(STORAGE_KEY);
+      const storedGroupChats = localStorage.getItem(GROUP_CHATS_STORAGE_KEY);
       const groupChats = storedGroupChats ? JSON.parse(storedGroupChats) : [];
-
-      const combinedChats = [...allChats.filter((c: Chat) => c.type !== 'group'), ...groupChats];
+      
+      const combinedChats = [...allChats, ...groupChats];
       setChats(combinedChats);
 
-      if (requestedChatId) {
+      if (requestedChatId && combinedChats.some(c => c.id === requestedChatId)) {
         setSelectedChatId(requestedChatId);
       }
     } catch (error) {
@@ -64,8 +65,7 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
   useEffect(() => {
     if (isMounted) {
       try {
-        const groupChats = chats.filter(c => c.type === 'group');
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(groupChats));
+        // Persist all chats, not just groups
         localStorage.setItem(ALL_CHATS_STORAGE_KEY, JSON.stringify(chats));
       } catch (error) {
         console.error('Failed to save chats to localStorage', error);
@@ -104,8 +104,10 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(' ', ''),
     };
 
+    let chatUpdated = false;
     const updatedChats = chats.map(chat => {
       if (chat.id === selectedChatId) {
+        chatUpdated = true;
         return {
           ...chat,
           messages: [...chat.messages, newMessage],
@@ -115,7 +117,10 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
       }
       return chat;
     });
-    setChats(updatedChats);
+
+    if(chatUpdated) {
+        setChats(updatedChats);
+    }
 
     const currentChat = updatedChats.find(c => c.id === selectedChatId);
     if (currentChat && currentChat.participants.includes('user2') && currentChat.type !== 'public') {
@@ -176,32 +181,16 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
   };
 
   const handleLeaveRoom = (chatId: string, chatName?: string) => {
+    setChats(prev => prev.filter(chat => chat.id !== chatId));
+    setSelectedChatId(null); // Deselect the chat
+    router.push('/guardian/group-rooms'); // Navigate away
     toast({
       title: 'Left Room',
       description: `You have left "${chatName}".`,
     });
-    router.push('/guardian/group-rooms');
   };
 
   const selectedChat = chats.find(c => c.id === selectedChatId);
-
-  if (selectedChat) {
-    return (
-      <div className="flex flex-col h-screen bg-background">
-        <main className="flex-1 flex flex-col">
-          <ChatView
-            chat={selectedChat}
-            users={users}
-            currentUser={currentUser}
-            onSendMessage={handleSendMessage}
-            onReactToMessage={handleReactToMessage}
-            isAiReplying={isAiReplying}
-            onLeaveRoom={handleLeaveRoom}
-          />
-        </main>
-      </div>
-    );
-  }
 
   const sidebarContent = (
     <ChatSidebar
@@ -212,6 +201,22 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
       onSelectChat={handleSelectChat}
     />
   );
+  
+  if(isMobile && selectedChat) {
+      return (
+        <div className="flex flex-col h-screen bg-background">
+             <ChatView
+              chat={selectedChat}
+              users={users}
+              currentUser={currentUser}
+              onSendMessage={handleSendMessage}
+              onReactToMessage={handleReactToMessage}
+              isAiReplying={isAiReplying}
+              onLeaveRoom={handleLeaveRoom}
+            />
+        </div>
+      )
+  }
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -220,9 +225,11 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
         {isMobile ? (
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="absolute top-16 left-2 z-10 md:hidden">
-                <PanelLeft />
-              </Button>
+               {!selectedChat && (
+                 <Button variant="ghost" size="icon" className="absolute top-16 left-2 z-10 md:hidden">
+                    <PanelLeft />
+                 </Button>
+               )}
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-80">
               {sidebarContent}
@@ -232,7 +239,19 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
           sidebarContent
         )}
         <main className="flex-1 flex flex-col">
-          {isMounted && (isMobile ? null : <NoChatSelected />)}
+          {selectedChat ? (
+            <ChatView
+                chat={selectedChat}
+                users={users}
+                currentUser={currentUser}
+                onSendMessage={handleSendMessage}
+                onReactToMessage={handleReactToMessage}
+                isAiReplying={isAiReplying}
+                onLeaveRoom={handleLeaveRoom}
+            />
+          ) : (
+            isMounted && <NoChatSelected />
+          )}
         </main>
       </div>
     </div>
@@ -247,9 +266,9 @@ function LoadingFallback() {
   );
 }
 
-export default function RoomsPage() {
-  const searchParams = useSearchParams();
-  const chatId = searchParams.get('chatId');
+export default function RoomsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const unwrappedSearchParams = React.use(searchParams);
+  const chatId = typeof unwrappedSearchParams.chatId === 'string' ? unwrappedSearchParams.chatId : null;
 
   return (
     <Suspense fallback={<LoadingFallback />}>
