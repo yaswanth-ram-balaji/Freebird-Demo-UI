@@ -51,9 +51,11 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
       const groupChats = storedGroupChats ? JSON.parse(storedGroupChats) : [];
       
       const combinedChats = [...allChats, ...groupChats];
-      setChats(combinedChats);
+      const uniqueChats = Array.from(new Map(combinedChats.map(chat => [chat.id, chat])).values());
 
-      if (requestedChatId && combinedChats.some(c => c.id === requestedChatId)) {
+      setChats(uniqueChats);
+
+      if (requestedChatId && uniqueChats.some(c => c.id === requestedChatId)) {
         setSelectedChatId(requestedChatId);
       }
     } catch (error) {
@@ -65,8 +67,12 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
   useEffect(() => {
     if (isMounted) {
       try {
-        // Persist all chats, not just groups
-        localStorage.setItem(ALL_CHATS_STORAGE_KEY, JSON.stringify(chats));
+        // We only persist the chats that are not part of the initial static data for groups
+        const chatsToSave = chats.filter(c => {
+            const isInitialGroup = initialChats.some(ic => ic.type === 'group' && ic.id === c.id);
+            return !isInitialGroup;
+        });
+        localStorage.setItem(ALL_CHATS_STORAGE_KEY, JSON.stringify(chatsToSave));
       } catch (error) {
         console.error('Failed to save chats to localStorage', error);
       }
