@@ -231,20 +231,21 @@ function RoomsPageContent() {
     )
   }
   
-  if(isMobile && selectedChat) {
-      return (
-        <div className="flex flex-col h-screen bg-background">
-             <ChatView
-              chat={selectedChat}
-              users={users}
-              currentUser={currentUser}
-              onSendMessage={handleSendMessage}
-              onReactToMessage={handleReactToMessage}
-              isAiReplying={isAiReplying}
-              onLeaveRoom={handleLeaveRoom}
-            />
-        </div>
-      )
+  if (isMobile && selectedChat) {
+    return (
+      <div className="flex flex-col h-screen bg-background">
+        <ChatView
+          chat={selectedChat}
+          users={users}
+          currentUser={currentUser}
+          onSendMessage={handleSendMessage}
+          onReactToMessage={handleReactToMessage}
+          isAiReplying={isAiReplying}
+          onLeaveRoom={handleLeaveRoom}
+          onBack={() => setSelectedChatId(null)}
+        />
+      </div>
+    );
   }
 
   return (
@@ -253,9 +254,9 @@ function RoomsPageContent() {
       <div className="flex flex-1 overflow-hidden">
         {isMobile ? (
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-            <SheetTrigger asChild>
-               {!selectedChat && (
-                 <Button variant="ghost" size="icon" className="absolute top-16 left-2 z-10 md:hidden">
+             <SheetTrigger asChild>
+               {!selectedChatId && (
+                 <Button variant="ghost" size="icon" className="absolute top-[4.2rem] left-2 z-10 md:hidden">
                     <PanelLeft />
                  </Button>
                )}
@@ -279,7 +280,9 @@ function RoomsPageContent() {
                 onLeaveRoom={handleLeaveRoom}
             />
           ) : (
-            <NoChatSelected />
+             <div className="h-full">
+              {isMobile ? (isSidebarOpen ? null : <NoChatSelected />) : <NoChatSelected />}
+            </div>
           )}
         </main>
       </div>

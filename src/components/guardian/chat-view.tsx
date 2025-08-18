@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Paperclip, Send, Smile, Copy, Bot, MoreVertical, LogOut, Download, FileText, Image as ImageIcon, Video, Pin, MessageSquare, Files, X, Megaphone, SendHorizonal, Users, AlertTriangle, Info } from 'lucide-react';
+import { Paperclip, Send, Smile, Copy, Bot, MoreVertical, LogOut, Download, FileText, Image as ImageIcon, Video, Pin, MessageSquare, Files, X, Megaphone, SendHorizonal, Users, AlertTriangle, Info, ArrowLeft } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   DropdownMenu,
@@ -29,6 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 type ChatViewProps = {
   chat: Chat;
@@ -38,6 +39,7 @@ type ChatViewProps = {
   onReactToMessage: (messageId: string, emoji: string) => void;
   isAiReplying?: boolean;
   onLeaveRoom?: (chatId: string, chatName?: string) => void;
+  onBack?: () => void;
 };
 
 const ReactionPicker = ({ onSelect }: { onSelect: (emoji: string) => void }) => (
@@ -92,12 +94,13 @@ const sampleFiles = [
     { name: 'Course_Syllabus.pdf', type: 'pdf', size: '450 KB' },
 ];
 
-export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMessage, isAiReplying = false, onLeaveRoom }: ChatViewProps) {
+export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMessage, isAiReplying = false, onLeaveRoom, onBack }: ChatViewProps) {
   const [message, setMessage] = React.useState('');
   const [messageType, setMessageType] = React.useState<MessageTag>('INFO');
   const [showPinned, setShowPinned] = React.useState(true);
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   React.useEffect(() => {
     if (scrollAreaRef.current) {
@@ -156,6 +159,11 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
   return (
     <div className="flex flex-col h-full bg-background">
       <header className="flex items-center gap-4 p-3 border-b bg-card shadow-sm">
+         {isMobile && onBack && (
+          <Button onClick={onBack} variant="ghost" size="icon">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        )}
         <div className="flex-1 flex items-center gap-3">
              <Avatar className="h-10 w-10">
                 <AvatarImage src={chatDetails.avatar} />
@@ -373,7 +381,7 @@ export function ChatView({ chat, users, currentUser, onSendMessage, onReactToMes
 
                         <Input
                             value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                            onChange={(e) => setMessage(e.g.value)}
                             placeholder="Type a message..."
                             autoComplete="off"
                             disabled={isAiReplying}
