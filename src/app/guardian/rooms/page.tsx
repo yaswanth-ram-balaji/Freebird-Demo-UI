@@ -208,6 +208,20 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
     />
   );
   
+  if(!isMounted) {
+    return (
+       <div className="flex flex-col h-screen bg-background">
+          <Header currentUser={currentUser} onStatusChange={handleStatusChange} showBackButton title="My Chats" />
+          <div className="flex flex-1 overflow-hidden">
+             <div className="w-80 border-r flex flex-col bg-card" />
+             <main className="flex-1 flex flex-col">
+                <NoChatSelected />
+             </main>
+          </div>
+       </div>
+    )
+  }
+  
   if(isMobile && selectedChat) {
       return (
         <div className="flex flex-col h-screen bg-background">
@@ -256,7 +270,7 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
                 onLeaveRoom={handleLeaveRoom}
             />
           ) : (
-            isMounted && <NoChatSelected />
+            <NoChatSelected />
           )}
         </main>
       </div>
