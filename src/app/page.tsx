@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { SplashScreen } from '@/components/guardian/splash-screen';
+import { DroneIcon } from '@/components/icons/drone-icon';
 
 
 const FeatureCard = ({ icon: Icon, title, description, isEmergency = false, href }: { icon: React.ElementType, title: string, description: string, isEmergency?: boolean, href: string }) => (
@@ -74,6 +75,13 @@ export default function FreeBirdPage() {
                 icon={AlertTriangle}
                 title="Emergency"
                 description="Instant SOS alerts and emergency response"
+                isEmergency
+              />
+              <FeatureCard
+                href="/guardian/drone-sos"
+                icon={DroneIcon}
+                title="Drone SOS"
+                description="Broadcast your location to rescue drones"
                 isEmergency
               />
              <FeatureCard 
