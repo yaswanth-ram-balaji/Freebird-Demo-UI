@@ -13,6 +13,7 @@ import { currentUser as initialUser, users as allUsers, chats as initialChats } 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { User as UserType } from '@/lib/data';
+import { useStatus } from '@/context/status-provider';
 
 const statusColors: Record<UserType['status'], string> = {
     safe: 'bg-green-500',
@@ -31,8 +32,9 @@ const statusText: Record<UserType['status'], string> = {
 export default function PrivateChatPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { currentUser } = useStatus();
 
-  const otherUsers = allUsers.filter(u => u.id !== initialUser.id && u.name !== 'Admin');
+  const otherUsers = allUsers.filter(u => u.id !== currentUser.id && u.name !== 'Admin');
 
   const handleRequestChat = (userName: string) => {
     toast({
@@ -41,8 +43,8 @@ export default function PrivateChatPage() {
     });
   };
   
-  const existingPrivateChats = initialChats.filter(c => c.type === 'private' && c.participants.includes(initialUser.id));
-  const existingChatPartners = existingPrivateChats.flatMap(c => c.participants).filter(pId => pId !== initialUser.id);
+  const existingPrivateChats = initialChats.filter(c => c.type === 'private' && c.participants.includes(currentUser.id));
+  const existingChatPartners = existingPrivateChats.flatMap(c => c.participants).filter(pId => pId !== currentUser.id);
   
   const handleStartChat = (userId: string) => {
       const chat = existingPrivateChats.find(c => c.participants.includes(userId));

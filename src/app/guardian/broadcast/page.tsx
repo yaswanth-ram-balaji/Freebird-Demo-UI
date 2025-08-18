@@ -5,7 +5,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ChatView } from '@/components/guardian/chat-view';
-import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
+import { chats as initialChats, users } from '@/lib/data';
 import type { Chat, Message, User, MessageTag } from '@/lib/data';
 import { Header } from '@/components/guardian/header';
 import { useAnonymity } from '@/context/anonymity-provider';
@@ -13,12 +13,13 @@ import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useStatus } from '@/context/status-provider';
 
 
 export default function BroadcastPage() {
   const router = useRouter();
   const [chats, setChats] = useState<Chat[]>(initialChats);
-  const [currentUser, setCurrentUser] = useState<User>(initialUser);
+  const { currentUser, setCurrentUser, setStatus } = useStatus();
   const { isAnonymous } = useAnonymity();
   const [isAiReplying, setIsAiReplying] = useState(false);
 
@@ -28,7 +29,7 @@ export default function BroadcastPage() {
 
   useEffect(() => {
     setCurrentUser(prevUser => ({ ...prevUser, anonymous: isAnonymous }));
-  }, [isAnonymous]);
+  }, [isAnonymous, setCurrentUser]);
   
   if (!publicChat) {
     // This case should not happen in the prototype, but it's good practice.
@@ -94,9 +95,8 @@ export default function BroadcastPage() {
     );
   };
   
-  const handleStatusChange = (status: User['status']) => {
-    setCurrentUser(prevUser => ({...prevUser, status}));
-    // Here you would also update the user's status on the backend
+  const handleStatusChange = (newStatus: User['status']) => {
+    setStatus(newStatus);
   }
   
   return (

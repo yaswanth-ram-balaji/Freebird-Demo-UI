@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChatSidebar } from '@/components/guardian/chat-sidebar';
 import { ChatView } from '@/components/guardian/chat-view';
 import { chats as initialChats, users, currentUser as initialUser } from '@/lib/data';
@@ -16,6 +16,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useAnonymity } from '@/context/anonymity-provider';
 import { getAiResponse } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
+import { useStatus } from '@/context/status-provider';
 
 const GROUP_CHATS_STORAGE_KEY = 'guardianlink-group-chats';
 const ALL_CHATS_STORAGE_KEY = 'guardianlink-all-chats';
@@ -28,13 +29,16 @@ const NoChatSelected = () => (
   </div>
 );
 
-function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null }) {
+function RoomsPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedChatId = searchParams.get('chatId');
+
   const { toast } = useToast();
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<User>(initialUser);
+  const { currentUser, setCurrentUser, setStatus } = useStatus();
   const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAnonymous } = useAnonymity();
@@ -43,26 +47,31 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
 
   useEffect(() => {
     setIsMounted(true);
-    try {
-      const storedAllChats = localStorage.getItem(ALL_CHATS_STORAGE_KEY);
-      const allChats = storedAllChats ? JSON.parse(storedAllChats) : initialChats.filter(c => c.type !== 'group');
+  }, []);
+  
+  useEffect(() => {
+    if (isMounted) {
+      try {
+        const storedAllChats = localStorage.getItem(ALL_CHATS_STORAGE_KEY);
+        const allChats = storedAllChats ? JSON.parse(storedAllChats) : initialChats.filter(c => c.type !== 'group');
 
-      const storedGroupChats = localStorage.getItem(GROUP_CHATS_STORAGE_KEY);
-      const groupChats = storedGroupChats ? JSON.parse(storedGroupChats) : [];
-      
-      const combinedChats = [...allChats, ...groupChats];
-      const uniqueChats = Array.from(new Map(combinedChats.map(chat => [chat.id, chat])).values());
+        const storedGroupChats = localStorage.getItem(GROUP_CHATS_STORAGE_KEY);
+        const groupChats = storedGroupChats ? JSON.parse(storedGroupChats) : [];
+        
+        const combinedChats = [...allChats, ...groupChats];
+        const uniqueChats = Array.from(new Map(combinedChats.map(chat => [chat.id, chat])).values());
 
-      setChats(uniqueChats);
+        setChats(uniqueChats);
 
-      if (requestedChatId && uniqueChats.some(c => c.id === requestedChatId)) {
-        setSelectedChatId(requestedChatId);
+        if (requestedChatId && uniqueChats.some(c => c.id === requestedChatId)) {
+          setSelectedChatId(requestedChatId);
+        }
+      } catch (error) {
+        console.error('Failed to load chats from localStorage', error);
+        setChats(initialChats);
       }
-    } catch (error) {
-      console.error('Failed to load chats from localStorage', error);
-      setChats(initialChats);
     }
-  }, [requestedChatId]);
+  }, [requestedChatId, isMounted]);
 
   useEffect(() => {
     if (isMounted) {
@@ -83,7 +92,7 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
 
   useEffect(() => {
     setCurrentUser(prevUser => ({ ...prevUser, anonymous: isAnonymous }));
-  }, [isAnonymous]);
+  }, [isAnonymous, setCurrentUser]);
 
   useEffect(() => {
     if (!isMobile) {
@@ -182,8 +191,8 @@ function RoomsPageContent({ requestedChatId }: { requestedChatId: string | null 
     );
   };
 
-  const handleStatusChange = (status: User['status']) => {
-    setCurrentUser(prevUser => ({ ...prevUser, status }));
+  const handleStatusChange = (newStatus: User['status']) => {
+    setStatus(newStatus);
   };
 
   const handleLeaveRoom = (chatId: string, chatName?: string) => {
@@ -286,13 +295,10 @@ function LoadingFallback() {
   );
 }
 
-export default function RoomsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const unwrappedSearchParams = React.use(searchParams);
-  const chatId = typeof unwrappedSearchParams.chatId === 'string' ? unwrappedSearchParams.chatId : null;
-
+export default function RoomsPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <RoomsPageContent requestedChatId={chatId} />
+      <RoomsPageContent />
     </Suspense>
   );
 }

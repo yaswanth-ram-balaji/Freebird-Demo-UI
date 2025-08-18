@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/context/theme-provider';
 import { AnonymityProvider } from '@/context/anonymity-provider';
 import * as React from 'react';
+import { StatusProvider } from '@/context/status-provider';
 
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600'] });
@@ -35,10 +36,12 @@ export default function RootLayout({
             enableSystem
           >
           <AnonymityProvider>
-            <React.Suspense>
-              {children}
-            </React.Suspense>
-            <Toaster />
+            <StatusProvider>
+              <React.Suspense>
+                {children}
+              </React.Suspense>
+              <Toaster />
+            </StatusProvider>
           </AnonymityProvider>
         </ThemeProvider>
       </body>

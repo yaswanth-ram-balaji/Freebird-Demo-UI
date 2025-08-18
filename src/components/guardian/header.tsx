@@ -38,6 +38,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useTheme } from '@/context/theme-provider';
 import { useAnonymity } from '@/context/anonymity-provider';
+import * as React from 'react';
 
 type HeaderProps = {
   currentUser: User;
@@ -52,9 +53,19 @@ export function Header({
   title,
   showBackButton = false,
 }: HeaderProps) {
-
   const { theme, setTheme } = useTheme();
   const { isAnonymous, setIsAnonymous } = useAnonymity();
+  const [isMounted, setIsMounted] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    // Render a placeholder or null during server-side rendering
+    return <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-card border-b" />;
+  }
+
   const isDarkMode = theme === 'dark';
 
   const toggleDarkMode = () => {
