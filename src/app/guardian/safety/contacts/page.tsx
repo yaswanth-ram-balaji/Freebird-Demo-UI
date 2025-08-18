@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, UserPlus, Phone, MessageSquare, Trash2, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,6 +48,7 @@ const initialContacts: Contact[] = [
 
 export default function TrustedContactsPage() {
     const { toast } = useToast();
+    const router = useRouter();
     const [contacts, setContacts] = React.useState<Contact[]>([]);
     const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
     const [newContactName, setNewContactName] = React.useState('');
@@ -118,11 +119,9 @@ export default function TrustedContactsPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
         <div className="container flex items-center justify-between h-16 px-4 mx-auto md:px-6">
-          <Link href="/guardian/safety" passHref>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <h1 className="text-xl font-bold">Trusted Contacts</h1>
            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
