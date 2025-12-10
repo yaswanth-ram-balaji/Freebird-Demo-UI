@@ -125,11 +125,3 @@ Extends communication beyond human mesh radius.
 
 FreeBird functions as a **lifeline when networks fail**.
 By combining **Bluetooth Mesh**, **privacy-first design**, and **drone relays**, it enables communities to **coordinate, protect, and save lives**, even when the internet is gone.
-
-
-✅ A new README
-✅ A combined README with both projects
-✅ A shorter “Idea Only” version
-✅ A highly polished GitHub-style design
-
-Just tell me: **“Add this to my README”** or **“Make a combined README.”**
